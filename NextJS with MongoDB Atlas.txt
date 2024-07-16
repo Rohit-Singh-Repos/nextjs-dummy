@@ -1,0 +1,1185 @@
+NEXTJS WITH MONGODB ATLAS
+--------------------------------------------------------------------------------------------------------------
+
+1) Introduction to MongoDB Atlas 
+----------------------------------------------------------------
+
+******************************************************************************************************************************************************************************************************************************
+
+2) MongoDB Atlas Environmental Setup
+----------------------------------------------------------------
+
+2.1) Steps to Setup MongoDB Atlas 
+----------------------------------------------------------
+
+>> Step 1 -- On Google search "MongoDB Atlas" or you can also go through "https://www.mongodb.com/cloud/atlas/register" so as to register yourself in order to use MongoDB Atlas.
+
+>> Step 2 -- When reached to register page click on "sign up with google" button (or, you can manually create account for you) and accepts / approve / fill policy or form related things so as to complete your registration process.
+
+>> Step 3 -- After that choose a suitable plan provided by MongoDB community as per your project / application need. Also specify your cluster (i.e. collection of databases) name accordingly and click on "create deployment / create cluster" button.
+
+>> Step 4 -- After cluster creation we need to create our database so choose a suitable username and password for your database first and then after click on "Browse Collection" > "create database" > "Enter database and collection name" so as to create database and collection in MongoDB Atlas.
+
+>> Step 5 -- Click on "Insert Document" so as to create document inside of you database collection.
+
+******************************************************************************************************************************************************************************************************************************
+
+3) Connecting NextJS with MongoDB 
+----------------------------------------------------------------
+
+Step 1 -- Creating Environment File 
+----------------------------------------------------------
+
+.env.local
+------------------------------------
+
+user=rohitsinghdb // mongodb username
+password=rohit // mongodb password
+cluster=sampledb // mongodb cluster
+database=sampleDatabase // mongodb database
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Step 2 -- Creating Configuration File 
+----------------------------------------------------------
+
+>> Install Mongoose -- "npm i mongoose"
+
+src/utils/db.js
+------------------------------------
+
+const { user, password, cluster, database } = process.env
+export const connectionString = `mongodb+srv://${user}:${password}@${cluster}.lwnms7t.mongodb.net/${database}?retryWrites=true&w=majority&appName=${cluster}`
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Step 3 -- Checking Connection with MongoDB
+----------------------------------------------------------
+
+src/app/api/products/route.js
+------------------------------------
+
+import { connectionString } from "@/utils/db";
+import mongoose from "mongoose";
+import { NextResponse } from "next/server";
+
+export const GET = async() => {
+    console.log(connectionString)
+    await mongoose.connect(connectionString)
+    return NextResponse.json({ message: 'Hello NextJS' },{status:200});
+}
+
+******************************************************************************************************************************************************************************************************************************
+
+4) Calling From NextJS with MongoDB 
+----------------------------------------------------------------
+
+4.1) Calling API with GET Method 
+---------------------------------------------------------
+
+Example -- Code to call GET API 
+-----------------------------------------------------
+
+Environment File -- .env.local
+------------------------------------------------
+
+>> No Change
+
+Database File -- src/utils/db.js
+------------------------------------------------
+
+>> No Change
+
+Schema File -- src/model/product.js
+------------------------------------------------
+
+import mongoose from "mongoose";
+
+const productModel = new mongoose.Schema({
+    name:String,
+    price:String,
+    brand:String,
+    category:String,
+    color:String
+})
+
+export const ProductModel = mongoose.models.products || mongoose.model("products",productModel);
+
+API File -- src/app/api/products/route.js
+------------------------------------------------
+
+Route -- /api/products/
+
+import { ProductModel } from "@/model/product";
+import { connectionString } from "@/utils/db";
+import mongoose from "mongoose";
+import { NextResponse } from "next/server";
+
+export const GET = async() => {
+    const productResponse = {
+        data:null,
+        success:false,
+        status:null
+    }
+    try {
+        await mongoose.connect(connectionString)
+        const apiData = await ProductModel.find();
+        productResponse.data = apiData;
+        productResponse.status = 200;
+        productResponse.success = true;
+    } catch (error) {
+        productResponse.data = `No data found ${error}`;
+        productResponse.status = 400;
+        productResponse.success = false;
+    }
+    
+    return NextResponse.json({ result:productResponse.data, success:productResponse.success},{status:productResponse.status});
+}
+
+UI Code 
+------------------------------------------------
+
+src/app/page.jsx
+--------------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS API Routes</h1>
+      <Link href="/showProducts" children="Show Products"/> <br />
+    </>
+  );
+}
+
+src/app/showProducts/page.jsx
+--------------------------------------------
+
+import React from 'react'
+
+const getProducts = async() => {
+    const apiResponse = await fetch("http://localhost:3000/api/products");
+    const productsData = await apiResponse.json();
+
+    if(productsData && productsData?.success){
+        return productsData.result;
+    }else{
+        return productsData.success;
+    }
+}
+
+const ShowProducts = async() => {
+  const allProductsData = await getProducts();
+  return (
+    <div>
+        <h1>All Products</h1>
+        <table border="1">
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Color</th>
+            </tr>
+            {
+                allProductsData && allProductsData.length !== 0 ? allProductsData.map((item,index) => (
+                    <tr key={index}>
+                       <td>{item.name}</td>
+                       <td>{item.price}</td>
+                       <td>{item.brand}</td>
+                       <td>{item.category}</td>
+                       <td>{item.color}</td>
+                    </tr>
+                )) : <tr><td>No Data</td></tr>
+            }
+        </table>
+    </div>
+  )
+}
+
+export default ShowProducts
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+4.2) Calling API with POST Method 
+---------------------------------------------------------
+
+Example -- Code to call POST API 
+-----------------------------------------------------
+
+Environment File -- .env.local
+------------------------------------------------
+
+>> No Change
+
+Database File -- src/utils/db.js
+------------------------------------------------
+
+>> No Change
+
+Schema File -- src/model/product.js
+------------------------------------------------
+
+>> No Change
+
+API File -- src/app/api/products/route.js
+------------------------------------------------
+
+Route -- /api/products/
+
+import { ProductModel } from "@/model/product";
+import { connectionString } from "@/utils/db";
+import mongoose from "mongoose";
+import { NextResponse } from "next/server";
+
+export const POST = async(request) => {
+    const productResponse = {
+        message:null,
+        success:false,
+        status:200
+    }
+    try {
+        await mongoose.connect(connectionString);
+
+
+        // For Hardcoded Values 
+        const productData = await new ProductModel({
+            name:"Apple Iwatch Pro",
+            price:"27,000",
+            brand:"Apple",
+            category:"watch",
+            color:"white"
+        })
+
+        Or,
+
+        // For Dynamic Values (to be send from UI/Postman)
+        const payload = await request.json()
+        const productData = await new ProductModel(payload)
+
+
+        const result = await productData.save();
+        if(Object.keys(result).length !== 0){
+            productResponse.message = `Data created successfully`;
+            productResponse.status = 200;
+            productResponse.success = true;
+        }        
+    } catch (error) {
+        productResponse.message = `Something Went Wrong ${error}`;
+        productResponse.status = 400;
+        productResponse.success = false;
+    }
+    
+    return NextResponse.json({ message:productResponse.message, success:productResponse.success},{status:productResponse.status});
+}
+
+UI Code 
+------------------------------------------------
+
+src/app/page.jsx
+--------------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS API Routes</h1>
+      <Link href="/addProducts" children="Add Products"/>
+    </>
+  );
+}
+
+src/app/addProducts/page.jsx
+--------------------------------------------
+
+"use client"
+
+import React,{useState} from 'react'
+
+const AddProducts = () => {
+  const [inputVal, setInputVal] = useState({
+    name:"",
+    price:"",
+    brand:"",
+    category:"",
+    color:""
+  })
+
+  const handleInputs = (e) => {
+    const { name, value } = e.target;
+    setInputVal({
+      ...inputVal,
+      [name]:value
+    })
+  }
+
+  const addProduct = async() => {
+    const { name, price, brand, category, color } = inputVal;
+    const result = await fetch("http://localhost:3000/api/products",{
+        method:"Post",
+        body:JSON.stringify({
+          name,
+          price,
+          brand,
+          category,
+          color
+        })
+      })
+    const apiResponse = await result.json();
+    if(apiResponse && apiResponse?.success){
+      alert("Data Created Successfully")
+    }else{
+      alert("Something Went Wrong")
+    }
+  } 
+  
+  return (
+    <div>
+      <h1>Add Products</h1>
+      <input type="text" name="name" value={inputVal.name} onChange={handleInputs} placeholder='Product name'/> <br />
+      <input type="text" name="price" value={inputVal.price} onChange={handleInputs} placeholder='Price'/> <br />
+      <input type="text" name="brand" value={inputVal.brand} onChange={handleInputs} placeholder='Brand'/> <br />
+      <input type="text" name="category" value={inputVal.category} onChange={handleInputs} placeholder='Category'/> <br />
+      <input type="text" name="color" value={inputVal.color} onChange={handleInputs} placeholder='Color'/> <br />
+      <button onClick={addProduct}>Add Product</button>
+    </div>
+  )
+}
+
+export default AddProducts
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+4.3) Calling API with PUT Method 
+---------------------------------------------------------
+
+Example -- Code to call PUT API 
+-----------------------------------------------------
+
+Environment File -- .env.local
+------------------------------------------------
+
+>> No Change
+
+Database File -- src/utils/db.js
+------------------------------------------------
+
+>> No Change
+
+Schema File -- src/model/product.js
+------------------------------------------------
+
+>> No Change
+
+API File -- src/app/api/products/[products]/route.js
+------------------------------------------------
+
+import { ProductModel } from "@/model/product";
+import { connectionString } from "@/utils/db";
+import mongoose from "mongoose";
+import { NextResponse } from "next/server";
+
+export const PUT = async(request,content) => { // For Updating
+    try {
+        const productId = content.params.products;
+        const filterData = {_id:productId};
+        await mongoose.connect(connectionString);
+        const payloadData = await request.json();
+        const updatedData = await ProductModel.findOneAndUpdate(filterData,payloadData);
+        return NextResponse.json({result:updatedData,success:true},{status:201})
+    } catch (error) {
+        return NextResponse.json({result:"Something Went Wrong",success:false},{status:400})
+    }
+}
+
+
+export const GET = async(request,content) => { // For Fetching
+    try {
+        const productId = content.params.products;
+        const filterData = {_id:productId};
+        await mongoose.connect(connectionString);
+        const updatedData = await ProductModel.findById(filterData);
+        return NextResponse.json({result:updatedData,success:true},{status:201})
+    } catch (error) {
+        return NextResponse.json({result:"Something Went Wrong",success:false},{status:400})
+    }
+}
+
+UI Code 
+------------------------------------------------------
+
+src/app/showProducts/page.jsx
+------------------------------------------------------
+
+import Link from 'next/link';
+import React from 'react'
+
+const getProducts = async() => {
+    const apiResponse = await fetch("http://localhost:3000/api/products");
+    const productsData = await apiResponse.json();
+
+    if(productsData && productsData?.success){
+        return productsData.result;
+    }else{
+        return productsData.success;
+    }
+}
+
+const ShowProducts = async() => {
+  const allProductsData = await getProducts();
+  return (
+    <div>
+        <h1>All Products</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Color</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+            {
+                allProductsData && allProductsData.length !== 0 ? allProductsData.map((item,index) => (
+                    <tr key={index}>
+                       <td>{item.name}</td>
+                       <td>{item.price}</td>
+                       <td>{item.brand}</td>
+                       <td>{item.category}</td>
+                       <td>{item.color}</td>
+                       <td><Link href={`/showProducts/${item._id}`} children="Edit Product"/></td>
+                    </tr>
+                )) : <tr><td>No Data</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+  )
+}
+
+export default ShowProducts
+
+src/app/showProducts/[editProduct]/page.jsx
+------------------------------------------------------
+
+"use client";
+
+import React, { useState, useEffect } from "react";
+
+const EditProduct = (props) => {
+  const [inputVal, setInputVal] = useState({
+    name: "",
+    price: "",
+    brand: "",
+    category: "",
+    color: "",
+  });
+
+  useEffect(() => {
+    getProductData();
+  }, []);
+
+  const handleInputs = (e) => {
+    const { name, value } = e.target;
+    setInputVal({
+      ...inputVal,
+      [name]: value,
+    });
+  };
+
+  const getProductData = async () => {
+    const productId = props && props.params.editProduct;
+    const apiResponse = await fetch(
+      `http://localhost:3000/api/products/${productId}`
+    );
+    const productData = await apiResponse.json();
+    if (productData && productData?.success) {
+      const { result: { name, price, brand, category, color } = {} } = {
+        ...productData,
+      };
+      setInputVal({
+        name,
+        price,
+        brand,
+        category,
+        color,
+      });
+    }
+  };
+
+  const updateProduct = async () => {
+    const productId = props && props.params.editProduct;
+    const { name, price, brand, category, color } = inputVal;
+    const apiResponse = await fetch(
+      `http://localhost:3000/api/products/${productId}`,{
+        method:"PUT",
+        body:JSON.stringify({
+            name,
+            price,
+            brand,
+            category,
+            color,
+        })
+      }
+    );
+    const productData = await apiResponse.json();
+    if(productData && productData.result){
+        alert("Data updated successfully")
+    }else{
+        alert("Something went wrong")
+    }
+  };
+
+  return (
+    <div>
+      <h1>Update Product</h1>
+      <input
+        type="text"
+        name="name"
+        value={inputVal.name}
+        onChange={handleInputs}
+        placeholder="Product name"
+      />{" "}
+      <br />
+      <input
+        type="text"
+        name="price"
+        value={inputVal.price}
+        onChange={handleInputs}
+        placeholder="Price"
+      />{" "}
+      <br />
+      <input
+        type="text"
+        name="brand"
+        value={inputVal.brand}
+        onChange={handleInputs}
+        placeholder="Brand"
+      />{" "}
+      <br />
+      <input
+        type="text"
+        name="category"
+        value={inputVal.category}
+        onChange={handleInputs}
+        placeholder="Category"
+      />{" "}
+      <br />
+      <input
+        type="text"
+        name="color"
+        value={inputVal.color}
+        onChange={handleInputs}
+        placeholder="Color"
+      />{" "}
+      <br />
+      <button onClick={updateProduct}>Update Product</button>
+    </div>
+  );
+};
+
+export default EditProduct;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+4.4) Calling API with DELETE Method 
+---------------------------------------------------------
+
+Example -- Code to call DELETE API 
+-----------------------------------------------------
+
+Example -- Code to call DELETE API 
+-----------------------------------------------------
+
+Environment File -- .env.local
+------------------------------------------------
+
+>> No Change
+
+Database File -- src/utils/db.js
+------------------------------------------------
+
+>> No Change
+
+Schema File -- src/model/product.js
+------------------------------------------------
+
+>> No Change
+
+API File -- src/app/api/products/[products]/route.js
+------------------------------------------------
+
+import { ProductModel } from "@/model/product";
+import { connectionString } from "@/utils/db";
+import mongoose from "mongoose";
+import { NextResponse } from "next/server";
+
+export const GET = async(request,content) => {
+    try {
+        const productId = content.params.products;
+        const filterData = {_id:productId};
+        await mongoose.connect(connectionString);
+        const updatedData = await ProductModel.findById(filterData);
+        return NextResponse.json({result:updatedData,success:true},{status:200})
+    } catch (error) {
+        return NextResponse.json({result:`Something Went Wrong ${error}`,success:false},{status:400})
+    }
+}
+
+export const DELETE = async(request,content) => {
+    try {
+        const productId = content.params.products;
+        const recordData = {_id:productId};
+        await mongoose.connect(connectionString);
+        const updatedData = await ProductModel.deleteOne(recordData);
+        return NextResponse.json({result:updatedData,success:true},{status:200})
+    } catch (error) {
+        return NextResponse.json({result:`Something Went Wrong ${error}`,success:false},{status:400})
+    }
+}
+
+UI Code File
+------------------------------------------------
+
+src/app/showProducts/page.jsx
+--------------------------------------------
+
+import Link from 'next/link';
+import React from 'react'
+import Button from '../components/Button';
+
+const getProducts = async() => {
+    const apiResponse = await fetch("http://localhost:3000/api/products",{
+        cache:"no-cache"
+    });
+    const productsData = await apiResponse.json();
+
+    if(productsData && productsData?.success){
+        return productsData.result;
+    }else{
+        return productsData.success;
+    }
+}
+
+const ShowProducts = async() => {
+  const allProductsData = await getProducts();
+  return (
+    <div>
+        <h1>All Products</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Color</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+            {
+                allProductsData && allProductsData.length !== 0 ? allProductsData.map((item,index) => (
+                    <tr key={index}>
+                       <td>{item.name}</td>
+                       <td>{item.price}</td>
+                       <td>{item.brand}</td>
+                       <td>{item.category}</td>
+                       <td>{item.color}</td>
+                       <td><Link href={`/showProducts/${item._id}`} children="Edit Product"/></td>
+                       <td><Button productId={item._id}>Delete Product</Button></td>
+                    </tr>
+                )) : <tr><td>No Data</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+  )
+}
+
+export default ShowProducts;
+
+src/app/components/Button.jsx
+--------------------------------------------
+
+"use client"
+
+import React from 'react'
+
+const Button = ({children,productId}) => {
+  const router = useRouter()
+  const deleteUser = async() => {
+    const apiResponseData = await fetch(`http://localhost:3000/api/products/${productId}`,{
+        method:"DELETE"
+    });
+    const result = await apiResponseData.json();
+    if(result && result.success){
+        alert("User Deleted");
+    }else{
+        alert("Something Went Wrong")
+    }
+  }
+  return (
+    <button onClick={deleteUser}>{children}</button>
+  )
+}
+
+export default Button
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+4.5) Complete CRUD Operation using NextJS and MongoDB
+---------------------------------------------------------
+
+4.5.1) Configurations with NextJS
+-----------------------------------------------------
+
+Step 1 -- Environment File -- .env.local
+------------------------------------------------
+
+user=rohitsinghdb
+password=rohit
+cluster=sampledb
+database=sampleDatabase
+
+Step 2 -- Database File -- src/utils/db.js
+------------------------------------------------
+
+const { user, password, cluster, database } = process.env
+export const connectionString = `mongodb+srv://${user}:${password}@${cluster}.lwnms7t.mongodb.net/${database}?retryWrites=true&w=majority&appName=${cluster}`
+
+Step 3 -- Schema File -- src/model/product.js
+------------------------------------------------
+
+import mongoose from "mongoose";
+
+const productModel = new mongoose.Schema({
+    name:String,
+    price:String,
+    brand:String,
+    category:String,
+    color:String
+})
+
+export const ProductModel = mongoose.models.products || mongoose.model("products",productModel);
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+4.5.2) API Creating using NextJS
+-----------------------------------------------------
+
+src/app/api/products/route.js 
+---------------------------------------------
+
+import { ProductModel } from "@/model/product";
+import { connectionString } from "@/utils/db";
+import mongoose from "mongoose";
+import { NextResponse } from "next/server";
+
+export const GET = async() => {
+    const productResponse = {
+        data:null,
+        success:false,
+        status:null
+    }
+    try {
+        await mongoose.connect(connectionString)
+        const apiData = await ProductModel.find();
+        productResponse.data = apiData;
+        productResponse.status = 200;
+        productResponse.success = true;
+    } catch (error) {
+        productResponse.data = `No data found ${error}`;
+        productResponse.status = 400;
+        productResponse.success = false;
+    }
+    
+    return NextResponse.json({ result:productResponse.data, success:productResponse.success},{status:productResponse.status});
+}
+
+export const POST = async(request) => {
+    const productResponse = {
+        message:null,
+        success:false,
+        status:200
+    }
+    try {
+        await mongoose.connect(connectionString);
+
+
+        // For Hardcoded Values 
+        // const productData = await new ProductModel({
+        //     name:"Apple Iwatch Pro",
+        //     price:"27,000",
+        //     brand:"Apple",
+        //     category:"watch",
+        //     color:"white"
+        // })
+
+        // Or,
+
+        // For Dynamic Values (to be send from UI/Postman)
+        const payload = await request.json()
+        const productData = await new ProductModel(payload)
+
+
+        const result = await productData.save();
+        if(Object.keys(result).length !== 0){
+            productResponse.message = `Data created successfully`;
+            productResponse.status = 200;
+            productResponse.success = true;
+        }        
+    } catch (error) {
+        productResponse.message = `Something Went Wrong ${error}`;
+        productResponse.status = 400;
+        productResponse.success = false;
+    }
+    
+    return NextResponse.json({ message:productResponse.message, success:productResponse.success},{status:productResponse.status});
+}
+
+src/app/api/products/[product]/route.js 
+---------------------------------------------
+
+import { ProductModel } from "@/model/product";
+import { connectionString } from "@/utils/db";
+import mongoose from "mongoose";
+import { NextResponse } from "next/server";
+
+export const PUT = async(request,content) => {
+    try {
+        const productId = content.params.products;
+        const filterData = {_id:productId};
+        await mongoose.connect(connectionString);
+        const payloadData = await request.json();
+        const updatedData = await ProductModel.findOneAndUpdate(filterData,payloadData);
+        return NextResponse.json({result:updatedData,success:true},{status:201})
+    } catch (error) {
+        return NextResponse.json({result:"Something Went Wrong",success:false},{status:400})
+    }
+}
+
+
+export const GET = async(request,content) => {
+    try {
+        const productId = content.params.products;
+        const filterData = {_id:productId};
+        await mongoose.connect(connectionString);
+        const updatedData = await ProductModel.findById(filterData);
+        return NextResponse.json({result:updatedData,success:true},{status:200})
+    } catch (error) {
+        return NextResponse.json({result:`Something Went Wrong ${error}`,success:false},{status:400})
+    }
+}
+
+export const DELETE = async(request,content) => {
+    try {
+        const productId = content.params.products;
+        const recordData = {_id:productId};
+        await mongoose.connect(connectionString);
+        const updatedData = await ProductModel.deleteOne(recordData);
+        return NextResponse.json({result:updatedData,success:true},{status:200})
+    } catch (error) {
+        return NextResponse.json({result:`Something Went Wrong ${error}`,success:false},{status:400})
+    }
+}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+4.5.3) UI Creating using NextJS
+-----------------------------------------------------
+
+src/app/page.jsx
+---------------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS API Routes</h1>
+      <Link href="/showProducts" children="Show Products"/> <br />
+      <Link href="/addProducts" children="Add Products"/>
+    </>
+  );
+}
+
+src/app/addProducts/page.jsx
+---------------------------------------------
+
+"use client"
+
+import React,{useState} from 'react'
+
+const AddProducts = () => {
+  const [inputVal, setInputVal] = useState({
+    name:"",
+    price:"",
+    brand:"",
+    category:"",
+    color:""
+  })
+
+  const handleInputs = (e) => {
+    const { name, value } = e.target;
+    setInputVal({
+      ...inputVal,
+      [name]:value
+    })
+  }
+
+  const addProduct = async() => {
+    const { name, price, brand, category, color } = inputVal;
+    const result = await fetch("http://localhost:3000/api/products",{
+        method:"Post",
+        body:JSON.stringify({
+          name,
+          price,
+          brand,
+          category,
+          color
+        })
+      })
+    const apiResponse = await result.json();
+    if(apiResponse && apiResponse?.success){
+      alert("Data Created Successfully")
+    }else{
+      alert("Something Went Wrong")
+    }
+  } 
+  
+  return (
+    <div>
+      <h1>Add Products</h1>
+      <input type="text" name="name" value={inputVal.name} onChange={handleInputs} placeholder='Product name'/> <br />
+      <input type="text" name="price" value={inputVal.price} onChange={handleInputs} placeholder='Price'/> <br />
+      <input type="text" name="brand" value={inputVal.brand} onChange={handleInputs} placeholder='Brand'/> <br />
+      <input type="text" name="category" value={inputVal.category} onChange={handleInputs} placeholder='Category'/> <br />
+      <input type="text" name="color" value={inputVal.color} onChange={handleInputs} placeholder='Color'/> <br />
+      <button onClick={addProduct}>Add Product</button>
+    </div>
+  )
+}
+
+export default AddProducts;
+
+src/app/showProducts/page.jsx
+---------------------------------------------
+
+import Link from 'next/link';
+import React from 'react'
+import Button from '../components/Button';
+
+const getProducts = async() => {
+    const apiResponse = await fetch("http://localhost:3000/api/products",{
+        cache:"no-cache"
+    });
+    const productsData = await apiResponse.json();
+
+    if(productsData && productsData?.success){
+        return productsData.result;
+    }else{
+        return productsData.success;
+    }
+}
+
+const ShowProducts = async() => {
+  const allProductsData = await getProducts();
+  return (
+    <div>
+        <h1>All Products</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Color</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+            {
+                allProductsData && allProductsData.length !== 0 ? allProductsData.map((item,index) => (
+                    <tr key={index}>
+                       <td>{item.name}</td>
+                       <td>{item.price}</td>
+                       <td>{item.brand}</td>
+                       <td>{item.category}</td>
+                       <td>{item.color}</td>
+                       <td><Link href={`/showProducts/${item._id}`} children="Edit Product"/></td>
+                       <td><Button productId={item._id}>Delete Product</Button></td>
+                    </tr>
+                )) : <tr><td>No Data</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+  )
+}
+
+export default ShowProducts;
+
+src/app/showProducts/[editProduct]/page.jsx
+---------------------------------------------
+
+"use client";
+
+import React, { useState, useEffect } from "react";
+
+const EditProduct = (props) => {
+  const [inputVal, setInputVal] = useState({
+    name: "",
+    price: "",
+    brand: "",
+    category: "",
+    color: "",
+  });
+
+  useEffect(() => {
+    getProductData();
+  }, []);
+
+  const handleInputs = (e) => {
+    const { name, value } = e.target;
+    setInputVal({
+      ...inputVal,
+      [name]: value,
+    });
+  };
+
+  const getProductData = async () => {
+    const productId = props && props.params.editProduct;
+    const apiResponse = await fetch(
+      `http://localhost:3000/api/products/${productId}`
+    );
+    const productData = await apiResponse.json();
+    if (productData && productData?.success) {
+      const { result: { name, price, brand, category, color } = {} } = {
+        ...productData,
+      };
+      setInputVal({
+        name,
+        price,
+        brand,
+        category,
+        color,
+      });
+    }
+  };
+
+  const updateProduct = async () => {
+    const productId = props && props.params.editProduct;
+    const { name, price, brand, category, color } = inputVal;
+    const apiResponse = await fetch(
+      `http://localhost:3000/api/products/${productId}`,{
+        method:"PUT",
+        body:JSON.stringify({
+            name,
+            price,
+            brand,
+            category,
+            color,
+        })
+      }
+    );
+    const productData = await apiResponse.json();
+    if(productData && productData.result){
+        alert("Data updated successfully")
+    }else{
+        alert("Something went wrong")
+    }
+  };
+
+  return (
+    <div>
+      <h1>Update Product</h1>
+      <input
+        type="text"
+        name="name"
+        value={inputVal.name}
+        onChange={handleInputs}
+        placeholder="Product name"
+      />{" "}
+      <br />
+      <input
+        type="text"
+        name="price"
+        value={inputVal.price}
+        onChange={handleInputs}
+        placeholder="Price"
+      />{" "}
+      <br />
+      <input
+        type="text"
+        name="brand"
+        value={inputVal.brand}
+        onChange={handleInputs}
+        placeholder="Brand"
+      />{" "}
+      <br />
+      <input
+        type="text"
+        name="category"
+        value={inputVal.category}
+        onChange={handleInputs}
+        placeholder="Category"
+      />{" "}
+      <br />
+      <input
+        type="text"
+        name="color"
+        value={inputVal.color}
+        onChange={handleInputs}
+        placeholder="Color"
+      />{" "}
+      <br />
+      <button onClick={updateProduct}>Update Product</button>
+    </div>
+  );
+};
+
+export default EditProduct;
+
+src/app/components/Button.jsx
+---------------------------------------------
+
+"use client"
+
+import React from 'react'
+
+const Button = ({children,productId}) => {
+  const deleteUser = async() => {
+    const apiResponseData = await fetch(`http://localhost:3000/api/products/${productId}`,{
+        method:"DELETE"
+    });
+    const result = await apiResponseData.json();
+    if(result && result.success){
+        alert("User Deleted");
+    }else{
+        alert("Something Went Wrong")
+    }
+  }
+  return (
+    <button onClick={deleteUser}>{children}</button>
+  )
+}
+
+export default Button
+
+******************************************************************************************************************************************************************************************************************************
+
+5) Uploading Image using NextJS and MongoDB (Pending)
+----------------------------------------------------------------
+
+
+
+============================================================================================================================================================================================================================== END OF FILE

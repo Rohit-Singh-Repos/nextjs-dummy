@@ -1,0 +1,3659 @@
+NEXTJS NOTES BY TUTORIALS 
+-----------------------------------------------------------------------------------------------
+
+0) Introduction to NextJS 
+-------------------------------------------------------------
+
+=> We have following benefits of using NextJS :-
+
+>> Easy setup -- Next.js provides a simple and easy setup process, with many features pre-configured for a variety of use cases.
+
+>> Wide community -- Next.js has a large and active developer community, with many resources available for learning and troubleshooting.
+
+>> Server-Side Rendering -- Next.js provides server-side rendering (SSR) out of the box, allowing for faster page loads and better search engine optimization (SEO). SSR also provides better accessibility for users with slower internet connections or limited device capabilities.
+
+>> Automatic Code Splitting -- Next.js automatically code-splits pages, optimizing them for performance and minimizing the amount of JavaScript required to load each page.
+
+>> Built-in API Routes -- Next.js includes API routes, allowing developers to easily create and manage server-side APIs without additional configuration.
+
+>> SEO optimization -- With its server-side rendering capabilities, Next.js can improve SEO rankings and visibility.
+
+>> Static site generation -- Next.js has a built-in static site generation feature, so we can generate static files that can be served from a CDN for faster loading times and improved SEO.
+
+>> Greater developer experience -- Next.js has excellent developer experience, with features for hot reloading and building, debugging, and testing.
+
+>> TypeScript Support -- Next.js has excellent TypeScript support, making it easier for developers to write safe and maintainable code.
+
+>> Extensible -- Next.js provides a robust API that allows developers to extend its functionality, making it a versatile option for a wide range of projects.
+
+>> Hot Module Replacement (HMR) -- Next.js allows for HMR, which speeds up development time by allowing us to see code changes immediately without having to refresh the page.
+
+>> Automatic code splitting -- By default, Next.js automatically splits up code chunks and only sends the code the user needs, which can improve website loading time.
+
+>> Automatic Image Optimization -- Next.js optimizes images automatically to improve page performance and reduce load times.
+
+>> Customizable Server APIs -- Next.js provides options to customize server-side APIs, which can be used to build more complex applications.
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+1) Create NextJS Application
+-------------------------------------------------------------
+
+1.1) Command to create NextJS App
+-------------------------------------------------------
+
+>> Command to create NextJS App -- "npx create-next-app nextjsapp"
+>> Command to launch NextJS App -- "npm run dev" (In Development Mode)
+>> Command to launch NextJS App -- "npm run start" (In Production Mode)
+>> Command to create NextJS Build -- "npm run build" 
+
+1.2) Setup for JSX Environment in "[js/ts]config.json"
+-------------------------------------------------------
+
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "jsx": "react"
+  }
+}
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+2) NextJS Simple / First Program
+-------------------------------------------------------------
+
+Example 1 -- Components in NextJS
+---------------------------------------------------------
+
+page.jsx
+----------------------------------------------
+
+export default function Home() {
+  return (
+    <>
+      <h1>Hello Nextjs</h1>
+    </>
+  );
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 2 -- Reusable Components in NextJS
+---------------------------------------------------------
+
+page.jsx
+----------------------------------------------
+
+const Child = () => {
+  return <h3>Hello Child Component</h3>
+}
+
+export default function Home() {
+  return (
+    <>
+      <h1>Hello Nextjs</h1>
+      <Child/>
+    </>
+  );
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 3 -- Passing props (data) to Components in NextJS
+---------------------------------------------------------
+
+page.jsx
+----------------------------------------------
+
+
+const Child = () => {
+  return <h3>Hello Child Component</h3>
+}
+
+export default function Home() {
+  return (
+    <>
+      <h1>Hello Nextjs</h1>
+      <Child name="JavaScript"/>
+      <Child name="ReactJS"/>
+      <Child name="NodeJS"/>
+      <Child name="ExpressJS"/>
+    </>
+  );
+}
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+3) Events, Functions and States in NextJS
+-------------------------------------------------------------
+
+Example 1 -- Calling events in NextJS
+---------------------------------------------------------
+
+=> In order to call events in NextJS we need to declare a directive with name "use client" to the top of file because we can only call events with client components.
+
+page.jsx 
+----------------------------------------------
+
+"use client"
+
+export default function Home() {
+  return (
+    <>
+      <h1>Hello Nextjs</h1>
+      <button onClick={() => console.log("Hello NextJS")}>Click Me</button>
+    </>
+  );
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 2 -- Calling functions in NextJS
+---------------------------------------------------------
+
+page.jsx 
+----------------------------------------------
+
+"use client"
+
+export default function Home() {
+  const funcWithoutParams = () => {
+    console.log("ReactJS")
+  }
+  const funcWithParams = (params) => {
+    console.log(params)
+  }
+  const funcWithEvents = (event) => {
+    console.log(event.target)
+  }
+  return (
+    <>
+      <h1>Hello Nextjs</h1>
+      <button onClick={funcWithoutParams}>Button 1</button>
+      <button onClick={() => funcWithParams("NextJS")}>Button 2</button>
+      <button onClick={(e) => funcWithEvents(e)}>Button 3</button>
+    </>
+  );
+}
+
+Example 2 -- Functions as a Functions or Components
+---------------------------------------------------------
+
+page.jsx 
+----------------------------------------------
+
+export default function Home() {
+  
+  const InnerFunction = ({type}) => {
+    return <h2>{type}</h2>
+  }
+  
+  return (
+    <>
+      <h1>NextJS App</h1>
+      <InnerFunction type="Using as a Component"/>
+      {InnerFunction({type:"Using as a Function"})}
+    </>
+  );
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 3 -- States in NextJS
+---------------------------------------------------------
+
+page.jsx 
+----------------------------------------------
+
+"use client"
+
+import { useState } from "react"
+
+const Child = (props) => {
+  const { library } = props
+  return(
+    <h1>Library {library}</h1>
+  )
+}
+
+export default function Home() {
+  const [framework, setFramework] = useState("NodeJS")
+  const [library, setLibrary] = useState("JQuery")
+  return (
+    <>
+      <h1>Framework {framework}</h1>
+      <Child library={library}/>
+      <button onClick={() => setFramework("NextJS")}>Change Framework</button>
+      <button onClick={() => setLibrary("ReactJS")}>Change Library</button>
+    </>
+  );
+}
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+4) Types of Components in NextJS
+-------------------------------------------------------------
+
+=> We have two different types of components in NextJS that includes :-
+
+4.1) Server Components
+---------------------------------------------------------
+
+>> These components render on the server side and they are async functions when fetching data.
+>> By default, all the components are server components.
+>> These components are useful when we need to fetch data from backend API's or When we need to use or secure our data (i.e., API keys) .
+>> Cannot use browser API's.
+>> In server components we cannot use hooks like useState, useEffect, ... etc hooks.
+>> No event listeners (onClick, onSubmit etc.)
+>> We can create server components async directly.
+
+NOTE :- If we have to fetch data or use NodeJS API's, use a server component.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+4.2) Client Components
+---------------------------------------------------------
+
+>> These components render on the client side and they are not an asyn functions.
+>> We can create client components with the help of "use client" directive.
+>> All UI related code and events should be written here.
+>> Cannot use API keys.
+>> Can use browser API's.
+>> Can use useState, useEffect etc hooks.
+>> Can use event listeners like onClick, onSubmit etc.
+>> We cannot create client components async directly.
+
+NOTE :- If we have to use useState / useEffect or listen to onClick / onSubmit, we should use a client component.
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+5) Routing and Navigations in NextJS
+-------------------------------------------------------------
+
+=> NextJS uses file based routing system, so in order to create routes using NextJS we must follow below pattern, also in NextJS "page.js / page.jsx" is considered as the "index" file.
+
+=> In NextJS if we need to create links, we need to use <Link> component from "next/link" package.
+
+>> src
+   >> app
+      >> folderName
+          >> page.jsx
+
+5.1) Basic Routing in NextJS
+--------------------------------------------------------
+
+Example 1 -- Basic Routing and Linking in NextJS
+----------------------------------------------------
+
+page.jsx
+------------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  
+  return (
+    <> 
+      <h1>NextJS Routing</h1>
+      <Link href="/about">Go to About Page</Link>
+      <Link href="/contact">Go to Contact Page</Link>
+    </>
+  );
+}
+
+Or,
+
+import Link from "next/link";
+
+export default function Home() {
+  
+  return (
+    <> 
+      <h1>NextJS Routing</h1>
+      <Link children="About Page" href="/about"/>
+      <Link children="Contact Page" href="/contact"/>
+    </>
+  );
+}
+
+about/page.jsx
+------------------------------------------
+
+import Link from "next/link"
+
+const About = () => {
+    return (
+        <>
+            <h1>About Page</h1>
+            <Link children="Home Page" href="/"/>
+        </>
+    )
+}
+
+export default About
+
+contact/page.jsx
+------------------------------------------
+
+import Link from "next/link"
+
+const Contact = () => {
+    return (
+        <>
+            <h1>Contact Page</h1>
+            <Link children="Home Page" href="/"/>
+        </>
+    )
+}
+
+export default Contact
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5.2) Navigation in NextJS
+--------------------------------------------------------
+
+>> next/router (> NextJS v13) -- next/router is the oldest package for navigation. It is more lightweight and built for basic routing needs. - It is useful for simple applications and applications that don't use modern features of nextJS
+
+>> next/navigation (<= NextJS v13) -- It is the newer routing package for routing. - It is a more powerful package that provides several advanced features, such as App router, Link, useRouter hook etc. Also it is a part or "App Router" that is especially built on top of "Server Components" that we selected when creating project
+
+>> NOTE:- "useRouter()" only works in a Client Component.
+
+Example 1 -- Basic Routing and Linking in NextJS
+----------------------------------------------------
+
+page.jsx
+------------------------------------------
+
+"use client"
+
+import { useRouter } from "next/navigation";
+
+export default function Home() {
+  const router = useRouter()
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <button onClick={() => router.push("/about")}>About Page</button>
+      <button onClick={() => router.push("/contact")}>Contact Page</button>
+    </>
+  );
+}
+
+about/page.jsx
+------------------------------------------
+
+"use client"
+
+import { useRouter } from "next/navigation";
+
+const About = () => {
+    const router = useRouter()
+    return (
+        <>
+            <h1>About Page</h1>
+            <button onClick={() => router.push("/")}>Home Page</button>
+        </>
+    )
+}
+
+export default About
+
+contact/page.jsx
+------------------------------------------
+
+"use client"
+
+import { useRouter } from "next/navigation";
+
+const Contact = () => {
+    const router = useRouter()
+    return (
+        <>
+            <h1>Contact Page</h1>
+            <button onClick={() => router.push("/")}>Home Page</button>
+        </>
+    )
+}
+
+export default Contact;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5.3) Nested Routing in NextJS
+--------------------------------------------------------
+
+=> In order to create nested routes we must follow below pattern :-
+
+>> src
+   >> app  
+      >> folderName
+        >> nestedRouteFolder1
+            >> page.jsx 
+        >> page.jsx
+      >> folderName
+        >> nestedRouteFolder2
+            >> page.jsx 
+        >> page.jsx
+   >> layout.jsx 
+   >> page.jsx
+
+
+Example 1 -- Nested Routing in NextJS
+----------------------------------------------------
+
+page.jsx
+------------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to About Page" href="/about"/>
+    </>
+  );
+}
+
+about/page.jsx
+------------------------------------------
+
+import Link from "next/link";
+
+const About = () => {
+    return (
+        <>
+            <h1>About Page</h1>
+            <Link children="Go to About Admin" href="/about/aboutAdmin"/>
+            <Link children="Go to About User" href="/about/aboutUser"/>
+        </>
+    )
+}
+
+export default About
+
+about/aboutAdmin/page.jsx
+------------------------------------------
+
+import React from 'react'
+
+const AboutAdmin = () => {
+  return (
+    <h1>AboutAdmin</h1>
+  )
+}
+
+export default AboutAdmin
+
+about/aboutUser/page.jsx
+------------------------------------------
+
+import React from 'react'
+
+const AboutUser = () => {
+  return (
+    <h1>AboutUser</h1>
+  )
+}
+
+export default AboutUser;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5.4) Dynamic Routing in NextJS
+--------------------------------------------------------
+
+=> Dynamic routing is a powerful feature provided by Next.js that allows us to create flexible and scalable applications.
+
+=> Dynamic routing is the process of generating routes and pages dynamically in response to user input or data changes. This approach is particularly useful for creating applications with varying content, such as blogs, e-commerce sites, and dashboards.
+
+=> In order to create a dynamic route, we need to create a folder / subfolder with square brackets [] to indicate dynamic segments in the route. Also the data we are passing through dynamic routes (i.e., src/app/products/[productDetail]/page.jsx) can be catch up through "params.dynamicRouteName / params.productDetail".
+
+=> Next.js makes dynamic routing easy by providing a set of tools and conventions that streamline the process. Here are some common use cases for dynamic routing in Next.js:
+
+1. Blog Posts
+--------------------------------------
+
+>> You can create a route for each blog post by dynamically generating pages based on the content stored in a database or a file system.
+
+2. E-commerce Product Pages
+--------------------------------------
+
+>> E-commerce websites often need dynamic routes to display product details, categories, and search results.
+
+3. User Profiles
+--------------------------------------
+
+>> User profiles can have dynamic routes where each user’s data is loaded on-demand.
+
+4. Dashboards
+--------------------------------------
+
+>> Building dashboards with dynamic content like analytics or user-specific data is a breeze with Next.js dynamic routing.
+
+NOTE :- We can't have two different types of dynamic routes at one route. The browser has no way of differentiating between a and b, or in your case a username and a team name.
+
+
+Example 1 -- Dynamic Routing in NextJS
+----------------------------------------------------
+
+src/app/page.jsx
+------------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to Products Page" href="/products"/>
+    </>
+  );
+}
+
+src/app/products/page.jsx
+------------------------------------------
+
+import Link from 'next/link'
+import React from 'react'
+
+const ProductsPage = () => {
+  return (
+    <>
+        <h1>Products Page</h1>
+        <ul>
+            <li>
+                <Link children="iPhone 5s" href="/products/iPhone5s"/>
+            </li>
+            <li>
+                <Link children="Iphone 6" href="/products/iPhone6"/>
+            </li>
+            <li>
+                <Link children="Iphone 13 Pro" href="/products/iPhone13Pro"/>
+            </li>
+            <li>
+                <Link children="Iphone X" href="/products/iPhoneX"/>
+            </li>
+        </ul>
+    </>
+  )
+}
+
+export default ProductsPage;
+
+src/app/products/[productDetail]/page.jsx
+------------------------------------------
+
+=> In order to get "params" data we can get only in client components.
+
+"use client"
+
+import React from 'react'
+
+const ProductsDetail = ({params}) => {
+  let component = <></>
+  switch(params.productDetail){
+    case "iPhone5s":
+        component = <p>The iPhone 5s is a classic smartphone known for its compact design and advanced features during its release. While it's an older model, it still provides a reliable user experience.</p>
+        break;
+    case "iPhone6":
+        component = <p>The iPhone 6 is a stylish and capable smartphone with a larger display and improved performance. It introduced new features and design elements, making it a popular choice in its time.</p>
+        break;
+    case "iPhone13Pro":
+        component = <p>The iPhone 13 Pro is a cutting-edge smartphone with a powerful camera system, high-performance chip, and stunning display. It offers advanced features for users who demand top-notch technology.</p>
+        break;
+    case "iPhoneX":
+        component = <p>The iPhone X is a flagship smartphone featuring a bezel-less OLED display, facial recognition technology (Face ID), and impressive performance. It represents a milestone in iPhone design and innovation.</p>
+        break;
+  } 
+  return (
+    <>
+        <h1>Products Details Page</h1>
+        <ul>
+            {component}
+        </ul>
+    </>
+  )
+}
+
+export default ProductsDetail;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5.5) Catch Route Segments in NextJS
+--------------------------------------------------------
+
+=> Each folder in a route represents a route segment. Each route segment is mapped to a corresponding segment in a URL path.
+
+=> Dynamic Segments can be extended to catch-all subsequent segments by adding an ellipsis inside the brackets [...segmentName].
+
+=> Example of Route -- /products/iphone6/madebyapple/.... so on
+
+Here,
+
+products >> segment1
+iphone6 >> segment2
+madebyapple >> segment3
+
+Example 1 -- Dynamic Routing in NextJS
+----------------------------------------------------
+
+src/app/page.jsx
+------------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to Products Page" href="/products"/>
+    </>
+  );
+}
+
+src/app/products/page.jsx
+------------------------------------------
+
+import Link from 'next/link'
+import React from 'react'
+
+const ProductsPage = () => {
+  return (
+    <>
+        <h1>Products Page</h1>
+        <ul>
+            <li>
+                <Link children="iPhone 5s" href="/products/iPhone5s"/>
+            </li>
+            <li>
+                <Link children="Iphone 6" href="/products/iPhone6"/>
+            </li>
+            <li>
+                <Link children="Iphone 13 Pro" href="/products/iPhone13Pro"/>
+            </li>
+            <li>
+                <Link children="Iphone X" href="/products/iPhoneX"/>
+            </li>
+        </ul>
+    </>
+  )
+}
+
+export default ProductsPage;
+
+src/app/products/[...productDetail]/page.jsx
+---------------------------------------------
+
+>> Page route -- /products/iphone6/madebyapple/
+
+"use client"
+
+import React from 'react'
+
+const ProductsDetail = ({params}) => {
+  return (
+    <>
+        <h1>Products Details Page</h1>
+        <p>Product Name is : {params.productDetail[0]}</p>
+        <p>Made By : {params.productDetail[1]}</p>
+    </>
+  )
+}
+
+export default ProductsDetail;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5.6) 404 Page in NextJS
+--------------------------------------------------------
+
+=> In order to create 404 page in NextJS, we should create a page with filename "not-found.jsx".
+
+Example 1 -- Global 404 Page 
+---------------------------------------------------
+
+src/app/page.jsx 
+------------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to Products Page" href="/products"/>
+    </>
+  );
+}
+
+src/app/layout.jsx 
+------------------------------------------
+
+export const metadata = {
+  title: 'Next.js',
+  description: 'Generated by Next.js',
+}
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+      </body>
+    </html>
+  )
+}
+
+src/app/not-found.jsx 
+------------------------------------------
+
+import React from 'react'
+
+const ErrorPage = () => {
+  return (
+    <h1>Something Went Wrong !!</h1>
+  )
+}
+
+export default ErrorPage
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+6) Layouts in NextJS
+-------------------------------------------------------------
+
+=> When building projects with Next.js, we typically create an entire user interface by assembling isolated components. However, some parts of the interface require the same code snippets across multiple routes — for example, the navigation header, footer, and sidebar. In order to manage this, we use layouts to structure the interface in a way that contains shared code snippets.
+
+=> A layout component can be defined once and used on several pages, giving your application a unified look and feel. Headers, footers, navigation menus, sidebars, and other typical features can all be found in layout components.
+
+=> In NextJS filename with "layout.js / layout.jsx" is common for that particular module / pages, so if we need to show common content / data to across / specific part or across all the modules of the application we can use this process.
+
+Example 1 -- Common layout for all modules
+----------------------------------------------------
+
+>> src
+   >> app  
+      >> folderName
+        >> nestedRouteFolder1
+            >> page.jsx 
+        >> page.jsx
+      >> folderName
+        >> nestedRouteFolder2
+            >> page.jsx 
+        >> page.jsx
+        >> layout.jsx -- (RootLayout)
+
+layout.jsx 
+--------------------------------------------
+
+export const metadata = {
+  title: 'Next.js',
+  description: 'Generated by Next.js',
+}
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <h1>Common Layout for All Module</h1> -- This content is visible across the application and for all modules
+        {children}
+      </body>
+    </html>
+  )
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 2 -- Common layout for specific module
+----------------------------------------------------
+
+>> src
+   >> app  
+      >> module1
+        >> nestedRouteFolder1
+            >> page.jsx 
+        >> page.jsx
+        >> layout.jsx -- (module1 layout)
+      >> module2
+        >> nestedRouteFolder2
+            >> page.jsx 
+        >> layout.jsx -- (module2 layout)
+
+page.jsx
+------------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to About Page" href="/about"/>
+    </>
+  );
+}
+
+about/layout.jsx
+------------------------------------------
+
+import React from 'react'
+
+const Layout = ({children}) => {
+  return (
+    <>
+        <h1>Common Layout for About Module</h1> -- This content is visible only for about module
+        {children}
+    </>
+  )
+}
+
+export default Layout
+
+about/page.jsx
+------------------------------------------
+
+import Link from "next/link";
+
+const About = () => {
+    return (
+        <>
+            <h1>About Page</h1>
+            <Link children="Go to About Admin" href="/about/aboutAdmin"/>
+            <Link children="Go to About User" href="/about/aboutUser"/>
+        </>
+    )
+}
+
+export default About
+
+about/aboutAdmin/page.jsx
+------------------------------------------
+
+import React from 'react'
+
+const AboutAdmin = () => {
+  return (
+    <h1>AboutAdmin</h1>
+  )
+}
+
+export default AboutAdmin
+
+about/aboutUser/page.jsx
+------------------------------------------
+
+import React from 'react'
+
+const AboutUser = () => {
+  return (
+    <h1>AboutUser</h1>
+  )
+}
+
+export default AboutUser;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 3 -- Dynamic Layouts
+----------------------------------------------------
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 4 -- Persisted Layouts
+----------------------------------------------------
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+7) Special Pages in NextJS
+-------------------------------------------------------------
+
+layout	Shared UI for a segment and its children
+page	Unique UI of a route and make routes publicly accessible
+loading	Loading UI for a segment and its children
+not-found	Not found UI for a segment and its children
+error	Error UI for a segment and its children
+global-error	Global Error UI
+route	Server-side API endpoint
+template	Specialized re-rendered Layout UI
+default	Fallback UI for Parallel Routes
+
+More Info -- https://nextjs.org/docs/app/building-your-application/routing#route-segments
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+8) Middlewares in NextJS
+-------------------------------------------------------------
+
+=> Middleware is a function that you can attach to routes in order for it to run before the route.
+
+=> Middlewares are code that runs before / after your request handler.
+
+=> The "middleware.js|ts" file is used to write Middleware in NextJS and run code on the server before a request is completed. Then, based on the incoming request, you can modify the response by rewriting, redirecting, modifying the request or response headers, or responding directly.
+
+=> Middlewares are commonly used for :-
+
+>> Analytics
+>> Authentication
+>> Redirecting [ In an Express App it is not applicables, cuz Express runs in backend ]
+>> Modifying the request/response
+
+
+Example 1 -- Creating Middlewares
+---------------------------------------------------
+
+src/app/page.jsx 
+------------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to About Page" href="/about"/>
+      <Link children="Go to Contact Page" href="/contact"/>
+      <Link children="Go to Products Page" href="/products"/>
+    </>
+  );
+}
+
+src/middleware.js
+------------------------------------------
+
+import { NextResponse } from "next/server"
+
+export function middleware(request){
+    console.log(request) // You can see this console.log result in CMD
+    if(request.nextUrl.pathname === "/products"){
+        return NextResponse.redirect(new URL("/contact", request.url))
+    }
+}
+
+Example 2 -- Middlewares with configurations
+---------------------------------------------------
+
+src/app/page.jsx 
+------------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to About Page" href="/about"/>
+      <Link children="Go to Contact Page" href="/contact"/>
+      <Link children="Go to Products Page" href="/products"/>
+    </>
+  );
+}
+
+src/middleware.js
+------------------------------------------
+
+import { NextResponse } from "next/server"
+
+export function middleware(request){
+    return NextResponse.redirect(new URL("/contact", request.url))
+}
+
+export const config = {
+    matcher:["/about/:path*"]
+}
+
+NOTE :- In this example, if you hit "/about" then you will be redirected to "/contact" page.
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+9) Introduction to Rendering
+-------------------------------------------------------------
+
+=> Rendering converts the code you write into user interfaces. 
+=> React and Next.js allows us to create hybrid web applications where parts of our code can be rendered on the server or the client. 
+=> There are two environments where web applications can be rendered :-
+
+>> On Client -- The client refers to the browser on a user's device that sends a request to a server for your application code. It then turns the response from the server into a user interface.
+
+>> On Server -- The server refers to the computer in a data center that stores your application code, receives requests from a client, and sends back an appropriate response.
+
+=> React uses client-side rendering by default, and the user is required to have JavaScript enabled on their browser.
+=> With Next.js, HTML is generated for each page in advance on server side, instead of having it all done by client-side JavaScript.
+
+8.1) Rendering in NextJS 
+---------------------------------------------------------
+
+=> In NextJS rendering can be done in two different ways :-
+
+a) Pre-Rendering,
+b) Client Side Rendering
+
+a) Pre-Rendering 
+----------------------------------------------------
+
+=> By default, Next.js pre-renders every page. This means that Next.js generates HTML for each page in advance, instead of having it all done by client-side JavaScript, which is what React does. 
+
+=> In case of ReactJS it sends down the huge bundle of JavaScript, and then everything is rendered in the client, which is the browser. 
+
+=> Pre-rendering can result in better performance and SEO because the web application is more indexable and crawlable website.
+
+=> With pre-rendering each generated HTML is associated with minimal JavaScript code necessary for that page. When a page is loaded by the browser, its JavaScript code runs and makes the page fully interactive (this process is called hydration in React).
+
+=> Hydration is the name given to the process in JavaScript frameworks to initialize the page in the browser after it has previously been server-rendered. While the server can produce the initial HTML we need to augment this output with event handlers and initialize our application state in a way that it can be interactive in the browser.
+
+a.1) Types of Pre-rendering in NextJS
+----------------------------------------------------
+
+=> Next.js has two forms of pre-rendering : "Static Generation (SSG)" and "Server-side Rendering(SSR)". The difference is in when it generates the HTML for a page.
+
+a.1.1) Static Site Generation (SSG)
+---------------------------------------------
+
+>> If a page uses Static Generation, the page HTML is generated at build time. That means in production, the page HTML is generated when you run "next build". This HTML will then be reused on each request. It can be cached by a CDN.
+
+Or,
+
+>> In SSG, the HTML is generated at build time and will be reused on each request.
+
+>> In Next.js, you can statically generate pages with or without external data.
+
+>> According to NextJS documentation they recommend us to use Static Generation over Server-side Rendering for performance reasons. Statically generated pages can be cached by CDN with no extra configuration to boost performance. However, in some cases, Server-side Rendering might be the only option.
+
+Or,
+
+>> According to NextJS documentation they recommend us for using Static Generation (with and without data) whenever possible because your page can be built once and served by CDN, which makes it much faster than having a server render the page on every request.
+
+>> We can use Static Generation for many types of pages :- 
+
+* Marketing pages
+* Blog posts and portfolios
+* E-commerce product listings
+* Help and documentation
+
+i) SSG without external data 
+--------------------------------------------
+
+>> By default, Next.js pre-renders pages using Static Generation without fetching data.
+
+Example 1 -- SSG without external data 
+----------------------------------------
+
+function About() {
+  return <div>About</div>
+}
+ 
+export default About
+
+ii) SSG with external data 
+--------------------------------------------
+
+>> Some pages require fetching external data (i.e., file system, API, DB) for pre-rendering. There are two scenarios, and one or both might apply. In each case, you can use these functions that Next.js provides:
+
+Example 1 -- For Page Content 
+----------------------------------------
+
+>> When your page content depends on external data we need to use "getStaticProps" method.
+
+pages/posts/page.jsx
+----------------------------------
+
+>> In order to fetch the posts data on pre-render, Next.js allows you to export an async function called "getStaticProps" from the same file. This function gets called at build time and lets you pass fetched data to the page's props on pre-render.
+
+// TODO: Need to fetch `posts` (by calling some API endpoint)
+//       before this page can be pre-rendered.
+export default function Blog({ posts }) {
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li>{post.title}</li>
+      ))}
+    </ul>
+  )
+}
+
+// This function gets called at build time
+export async function getStaticProps() {
+  // Call an external API endpoint to get posts
+  const res = await fetch('https://.../posts')
+  const posts = await res.json()
+ 
+  // By returning { props: { posts } }, the Blog component
+  // will receive `posts` as a prop at build time
+  return {
+    props: {
+      posts,
+    },
+  }
+}
+
+Example 2 -- For Page Path 
+----------------------------------------
+
+>> Next.js allows you to create pages with dynamic routes. For example, you can create a file called pages/posts/[id].js to show a single blog post based on id. This will allow you to show a blog post with id: 1 when you access posts/1.
+
+>> However, which id you want to pre-render at build time might depend on external data.
+
+>> In order to handle this, Next.js lets you export an async function called "getStaticPaths" from a dynamic page (pages/posts/[id]/page.jsx in this case). This function gets called at build time and lets you specify which paths you want to pre-render.
+
+pages/posts/[id]/page.jsx
+----------------------------------
+
+// TODO: Need to fetch `posts` (by calling some API endpoint)
+//       before this page can be pre-rendered.
+export default function Blog({ posts }) {
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li>{post.title}</li>
+      ))}
+    </ul>
+  )
+}
+ 
+// This function gets called at build time
+export async function getStaticPaths() {
+  // Call an external API endpoint to get posts
+  const res = await fetch('https://.../posts')
+  const posts = await res.json()
+ 
+  // Get the paths we want to pre-render based on posts
+  const paths = posts.map((post) => ({
+    params: { id: post.id },
+  }))
+ 
+  // We'll pre-render only these paths at build time.
+  // { fallback: false } means other routes should 404.
+  return { paths, fallback: false }
+}
+ 
+// This also gets called at build time
+export async function getStaticProps({ params }) {
+  // params contains the post `id`.
+  // If the route is like /posts/1, then params.id is 1
+  const res = await fetch(`https://.../posts/${params.id}`)
+  const post = await res.json()
+ 
+  // Pass post data to the page via props
+  return { props: { post } }
+}
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+a.1.2) Server Side Rendering (SSR)
+---------------------------------------------
+
+=> If a page uses Server-side Rendering, the page HTML is generated on each request.
+
+=> In order to use Server-side Rendering for a page, you need to export an async function called "getServerSideProps". This function will be called by the server on every request.
+
+=>  Static Generation is not a good idea if you cannot pre-render a page ahead of a user's request. Maybe your page shows frequently updated data, and the page content changes on every request. In that case, you can use Server-side Rendering. It will be slower, but the pre-rendered page will always be up-to-date. 
+
+=> "getServerSideProps" is similar to "getStaticProps", but the difference is that "getServerSideProps" is run on every request instead of on build time.
+
+=> For example, suppose that your page needs to pre-render frequently updated data (fetched from an external API). You can write "getServerSideProps" which fetches this data and passes it to Page like below example:
+
+Example 1 -- Get data using SSR 
+-----------------------------------------
+
+export default function Page({ data }) {
+  // Render data...
+}
+ 
+// This gets called on every request
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(`https://.../data`)
+  const data = await res.json()
+ 
+  // Pass data to the page via props
+  return { props: { data } }
+}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+a.2) Static, Dynamic, Streaming, Partial and ISR Rendering
+-----------------------------------------------------------
+
+a.2.1) Static Rendering 
+--------------------------------------------
+
+>> With static rendering, data fetching and rendering happens on the server at build time (when you deploy) or when revalidating data.
+
+>> As per static rendering, Whenever a user visits your application, the cached result is served. 
+
+>> Static rendering is useful for UI with no data or data that is shared across users, such as a static blog post or a product page. It might not be a good fit for a dashboard that has personalized data which is regularly updated.
+
+>> The opposite of static rendering is dynamic rendering.
+
+>> There are a couple of benefits of static rendering :-
+
+* Faster Websites - Prerendered content can be cached and globally distributed. This ensures that users around the world can access your website's content more quickly and reliably.
+
+* Reduced Server Load - Because the content is cached, your server does not have to dynamically generate content for each user request.
+
+* SEO - Prerendered content is easier for search engine crawlers to index, as the content is already available when the page loads. This can lead to improved search engine rankings.
+
+a.2.2) Dynamic Rendering 
+--------------------------------------------
+
+>> With dynamic rendering, content is rendered on the server for each user at request time (when the user visits the page). 
+
+Or,
+
+>> With dynamic rendering, data is rendered on each request. This is good for data that is unique to each user or for information that changes quickly.
+
+>> There are a couple of benefits of dynamic rendering :-
+
+* Real-Time Data - Dynamic rendering allows your application to display real-time or frequently updated data. This is ideal for applications where data changes often.
+
+* User-Specific Content - It's easier to serve personalized content, such as dashboards or user profiles, and update the data based on user interaction.
+
+* Request Time Information - Dynamic rendering allows you to access information that can only be known at request time, such as cookies or the URL search parameters.
+
+a.2.3) Streaming Rendering 
+--------------------------------------------
+
+>> Streaming is a new feature of Next.JS that’s only available with the App Router.
+
+>> Streaming is a data transfer technique that allows you to break down a route into smaller "chunks" and progressively stream them from the server to the client as they become ready.
+
+>> By streaming, you can prevent slow data requests from blocking your whole page. This allows the user to see and interact with parts of the page without waiting for all the data to load before any UI can be shown to the user.
+
+>> There are two ways you implement streaming in Next.js :-
+
+* At the page level, with the loading.tsx file.
+* For specific components, with <Suspense>
+
+a.2.4) Partial Pre-Rendering (PPR)
+--------------------------------------------
+
+>> Next.js 14 introduced an experimental version of Partial Prerendering – a new rendering model that allows you to combine the benefits of static and dynamic rendering in the same route.
+
+>> Partial Prerendering uses React's Suspense to defer rendering parts of your application until some condition is met (e.g. data is loaded).
+
+>> In order to enable PPR for your Next.js app by adding the ppr option to your next.config.mjs file:
+
+/** @type {import('next').NextConfig} */
+
+const nextConfig = {
+  experimental: {
+    ppr: 'incremental',
+  },
+};
+ 
+module.exports = nextConfig;
+
+a.2.5) Incremental Static Regeneration (ISR)
+--------------------------------------------
+
+>> If you have a very large amount of pages, generating them all at build time may not be feasible. Next.js allows you to create or update static pages after you have built your site.
+
+>> Incremental Static Regeneration enables developers and content editors to use static generation on a per-page basis, without needing to rebuild the entire site. With ISR, you can retain the benefits of static while scaling to millions of pages.
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+a.3) Checking Pre-rendering 
+----------------------------------------------------
+
+a.3.1) Checking Pre-rendering in NextJS 
+----------------------------------------------------
+
+=> We can also check that pre-rendering is happening or not by taking the following steps :-
+
+>> Step 1 -- Disable JavaScript in your browser. (Here’s how in Chrome).
+>> Step 2 -- Try accessing the page.
+
+>> You should see that your app is rendered without JavaScript. That’s because Next.js has pre-rendered the app into static HTML, allowing you to see the app UI without running JavaScript. You can also try the above steps on localhost, but CSS won’t be loaded if you disable JavaScript.
+
+a.3.2) Checking Pre-rendering in ReactJS 
+----------------------------------------------------
+
+=> If your app is a plain React.js app (without Next.js), there’s no pre-rendering, so you won’t be able to see the app if you disable JavaScript. For example:
+
+>> Step 1 -- Enable JavaScript in your browser and check out this page. This is a plain React.js app built with Create React App.
+Now, disable JavaScript and access the same page again.
+>> Step 2 -- You won’t see the app anymore — instead, it’ll say "You need to enable JavaScript to run this app." This is because the app is not pre-rendered into static HTML.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+b) Client Side Rendering 
+-----------------------------------------------
+
+=> In Client-Side Rendering (CSR) with React, the browser downloads a minimal HTML page and the JavaScript needed for the page. The JavaScript is then used to update the DOM and render the page. When the application is first loaded, the user may notice a slight delay before they can see the full page, this is because the page isn't fully rendered until all the JavaScript is downloaded, parsed, and executed.
+
+=> After the page has been loaded for the first time, navigating to other pages on the same website is typically faster, as only necessary data needs to be fetched, and JavaScript can re-render parts of the page without requiring a full page refresh.
+
+=> When we are using state and event listeners then we should use client components, it’s perfect for interactive components that are meant to produce an immediate result for users. So think of liking a post or comment on a social media site. This kind of feature could be built with client components since liking something involves interactivity, data that changes quickly, and displaying said data to users immediately.
+
+=> In Next.js, there are two ways you can implement client-side rendering :-
+
+>> Using React's useEffect() hook inside your pages instead of the server-side rendering methods (getStaticProps and getServerSideProps).
+
+>> Using a data fetching library like "SWR" or "TanStack Query" to fetch data on the client (recommended).
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+10) Data fetching in Client Vs Server Components
+--------------------------------------------------------------
+
+10.1) Data fetching in Client Components using API
+------------------------------------------------------
+
+Example 1 -- Data Fetching in Client Component
+--------------------------------------------------
+
+src/app/page.jsx 
+----------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to Products Page" href="/products"/>
+    </>
+  );
+}
+
+src/app/products/page.jsx 
+----------------------------------------
+
+"use client"
+import React, {useState, useEffect} from 'react'
+
+const ProductsPage = () => {
+  const [productsDataState, setProductsDataState] = useState([]);
+  useEffect(() => {
+    getProductsData()
+  },[])
+
+  const getProductsData = async () => {
+    const apiResponse = await fetch("https://dummyjson.com/products")
+    const productsData = await apiResponse.json();
+    setProductsDataState(productsData.products)
+  }
+  return (
+    <>
+        <h1>Products Page</h1>
+        {
+            productsDataState && productsDataState?.length > 0 ? productsDataState?.map((item,index) => (
+                <h4 key={index}>Name : {item?.title}</h4>
+            )) : <h3>No Data Found</h3>
+        }
+    </>
+  )
+}
+
+export default ProductsPage
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+10.2) Data fetching in Server Components using API
+------------------------------------------------------
+
+Example 1 -- Data Fetching in Server Component
+--------------------------------------------------
+
+src/app/page.jsx 
+----------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to Products Page" href="/products"/>
+    </>
+  );
+}
+
+src/app/products/page.jsx 
+----------------------------------------
+
+const productsData = async() => {
+    const apiResponseData = await fetch('https://dummyjson.com/products');
+    const productsData = await apiResponseData.json();
+    return productsData.products;
+}
+
+const ProductsListData = async () => {
+    const productsListData = await productsData();
+    return(
+        <>
+            <h1>Products List</h1>
+            {
+                productsListData && productsListData.length > 0 ? productsListData.map((item, index) => (
+                    <h3 key={index}>Name : {item.title}</h3>
+                )) : <h3>No Data Found !!</h3>
+            }
+        </>
+    )
+}
+
+export default ProductsListData;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+10.3) Using Client Components with Server Components 
+------------------------------------------------------
+
+=> We all know that the components that we are creating in NextJS are server components, so if we face any situation where we have to use client components with server components then we have to create seperate client components and we can reuse those components along with our server components.
+
+Example 1 -- Using Client with Server Components
+--------------------------------------------------
+
+src/app/page.jsx 
+----------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to Products Page" href="/products"/>
+    </>
+  );
+}
+
+src/app/products/page.jsx 
+----------------------------------------
+
+import { Button } from "./button";
+
+const productsData = async () => {
+  const apiResponseData = await fetch("https://dummyjson.com/products");
+  const productsData = await apiResponseData.json();
+  return productsData.products;
+};
+
+const ProductsListData = async () => {
+  const productsListData = await productsData();
+  return (
+    <>
+      <h1>Products List</h1>
+      {productsListData && productsListData.length > 0 ? (
+        productsListData.map((item, index) => (
+          <h3 key={index}>
+            Name : {item.title} <Button price={item.price}>Check Price</Button>
+          </h3>
+        ))
+      ) : (
+        <h3>No Data Found !!</h3>
+      )}
+    </>
+  );
+};
+
+export default ProductsListData;
+
+
+src/app/products/button.jsx 
+----------------------------------------
+
+"use client"
+
+import React from 'react'
+
+export const Button = ({children,price}) => {
+  return (
+    <button onClick={() => alert(price)}>{children}</button>
+  )
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 2 -- Using Client with Server Components
+--------------------------------------------------
+
+src/app/page.jsx 
+----------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to Products Page" href="/products"/>
+    </>
+  );
+}
+
+src/app/products/page.jsx 
+----------------------------------------
+
+import { ProductInfo } from "./productInfo";
+
+const productsData = async () => {
+  const apiResponseData = await fetch("https://dummyjson.com/products");
+  const productsData = await apiResponseData.json();
+  return productsData.products;
+};
+
+const ProductsListData = async () => {
+  const productsListData = await productsData();
+  return (
+    <>
+      <h1>Products List</h1>
+      {productsListData && productsListData.length > 0 ? (
+        productsListData.map((item, index) => (
+          <ProductInfo key={index} productData={item} />
+        ))
+      ) : (
+        <h3>No Data Found !!</h3>
+      )}
+    </>
+  );
+};
+
+export default ProductsListData;
+
+src/app/products/productInfo.jsx 
+----------------------------------------
+
+"use client";
+import React, { useState } from "react";
+
+export const ProductInfo = ({ productData }) => {
+  const [productPrice, setProductPrice] = useState(false);
+  return (
+    <>
+      <h3>Name: {productData.title}</h3>
+      {productPrice ? <h3>Price: {productData.price}</h3> : <></>}
+      <button onClick={() => setProductPrice(!productPrice)}>
+        {productPrice ? "Hide Price" : "Show Price"}
+      </button>
+    </>
+  );
+};
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+11) Styling NextJS Application
+--------------------------------------------------------------
+
+=> Next.js supports traditional CSS styling methodologies. Also in NextJS we cannot use internal styling i.e., we cannot use <style></style> tag.
+
+=> Next.js supports different ways of styling your application, that includes :-
+
+a) Global CSS 
+b) CSS Modules 
+c) CSS frameworks (i.e., Tailwind CSS)
+d) SASS 
+e) CSS-In-JS
+
+
+a) Global CSS 
+---------------------------------------------
+
+=> Simple to use and familiar for those experienced with traditional CSS, but can lead to larger CSS bundles and difficulty managing styles as the application grows.
+
+=> The global css affects the whole application styling and is applied on the "layout.js|jsx" files.
+
+Or,
+
+=> Next.js also supports global styles, allowing you to define styles that apply to your entire application. You can include global styles by importing CSS files into the "layout.js|jsx" file, which acts as an entry point for your Next.js application.
+
+=> Although we can style our components using external styling (i.e., through css files) across the application.
+
+Example 1 -- Using Global CSS
+--------------------------------------------------
+
+src/app/layout.jsx 
+---------------------------------------
+
+import "./style.css" // Global CSS
+
+export const metadata = {
+  title: 'Next.js',
+  description: 'Generated by Next.js',
+}
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+      </body>
+    </html>
+  )
+}
+
+src/app/style.css
+---------------------------------------
+
+h3{
+    color:green
+}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+b) CSS Modules 
+---------------------------------------------
+
+=> Create locally scoped CSS classes to avoid naming conflicts and improve maintainability.
+
+Or,
+
+=> CSS modules offer a modular approach to styling that allows you to encapsulate styles within individual components. Next.js provides built-in support for CSS modules, allowing scoped styling without the risk of class name collisions.
+
+Example 1 -- Using Modular CSS
+--------------------------------------------------
+
+src/app/page.jsx 
+---------------------------------------
+
+import React from 'react';
+import styles from './home.module.css';
+
+const HomePage = () => (
+  <div className={styles.container}>
+    <h1 className={styles.title}>Welcome to Next.js</h1>
+    <p>This is a basic example of CSS styles in Next.js.</p>
+  </div>
+);
+
+export default HomePage;
+
+Or,
+
+import React from 'react';
+import styles from './home.module.css';
+
+const HomePage = () => {
+  const { container, title } = styles;
+  return (
+    <div className={container}>
+      <h1 className={title}>Welcome to Next.js</h1>
+      <p>This is a basic example of CSS styles in Next.js.</p>
+    </div>
+  )
+}
+
+export default HomePage;
+
+src/app/home.module.css 
+---------------------------------------
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    background-color: red;
+}
+  
+.title {
+    font-size: 2rem;
+    color: green;
+}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+c) CSS frameworks (i.e., Tailwind CSS)
+---------------------------------------------
+
+=> A utility-first CSS framework that allows for rapid custom designs by composing utility classes.
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+d) SASS 
+---------------------------------------------
+
+=> A popular CSS preprocessor that extends CSS with features like variables, nested rules, and mixins.
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+e) CSS-In-JS
+---------------------------------------------
+
+=> Embed CSS directly in your JavaScript components using Inline Style or by using any other library that enables dynamic and scoped styling.
+
+>> Styled Components 
+>> Emotions 
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+12) Image Optimization in NextJS
+--------------------------------------------------------------
+
+=> According to Web Almanac, images account for a huge portion of the typical website’s page weight and can have a sizable impact on your website's LCP (Largest Contentful Paint) performance.
+
+=> The "next/image" is an extension of the HTML img element, evolved for the modern web. This means that resizing, optimizing, and serving images in modern formats like WebP (when the browser supports it) can be done automatically using next/image.
+
+=> Automatic Image Optimization works with any image source. Even if the image is hosted by an external data source, like a CMS, it can still be optimized.
+
+=> The Next.js Image (next/image) component extends the HTML <img> element with features for automatic image optimization that includes :-
+
+>> Size Optimization -- Automatically serve correctly sized images for each device, using modern image formats like WebP and AVIF.
+
+>> Visual Stability -- Prevent layout shift automatically when images are loading.
+
+>> Faster Page Loads -- Images are only loaded when they enter the viewport using native browser lazy loading, with optional blur-up placeholders.
+
+>> Asset Flexibility -- On-demand image resizing, even for images stored on remote servers
+
+Example 1 -- Using Local Images in NextJS
+--------------------------------------------------
+
+=> We can use ".jpg", ".png", or ".webp" image files as our local images.
+
+=> Next.js will automatically determine the width and height of your image based on the imported file. These values are used to prevent Cumulative Layout Shift while your image is loading.
+
+src/app/page.jsx
+---------------------------------------
+
+import React from 'react';
+import Image from 'next/image'
+import logoImage from '../../public/vercel.svg'
+
+const HomePage = () => {
+  return (
+    <Image
+      src={logoImage}
+      alt="Picture of the logo"
+      // width={500} automatically provided
+      // height={500} automatically provided
+      // blurDataURL="data:..." automatically provided
+      // placeholder="blur" // Optional blur-up while loading
+    />
+  )
+}
+
+export default HomePage;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 2 -- Using Remote Images in NextJS
+--------------------------------------------------
+
+=> To use a remote image, the src property should be a URL string. Since Next.js does not have access to remote files during the build process, you'll need to provide the width, height and optional blurDataURL props manually.
+
+=> The width and height attributes are used to infer the correct aspect ratio of image and avoid layout shift from the image loading in. The width and height do not determine the rendered size of the image file.
+
+src/app/page.jsx
+---------------------------------------
+
+import React from 'react';
+import Image from 'next/image'
+
+const HomePage = () => {
+  return (
+    <Image
+      src="https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg"
+      alt="Picture of the author"
+      width={500}
+      height={500}
+    />
+  )
+}
+
+export default HomePage;
+
+next.config.mjs
+---------------------------------------
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    images:{
+        domains:["cdn.pixabay.com"]
+    }
+};
+
+export default nextConfig;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 3 -- Image Vs img in NextJS
+--------------------------------------------------
+
+=>  When we are using NextJS image component then we don't need to specify width and height, but in case of <img/> we need to specify width and height in order to set a size otherwise the image with loads according to the browser window size. Also the images we show with <img/> tag are not optimized.
+
+src/app/page.jsx
+---------------------------------------
+
+import React from 'react';
+import Image from 'next/image'
+import logoImage from '../../public/vercel.svg'
+
+const HomePage = () => {
+  return (
+    <>
+      <Image
+        src={logoImage}
+        alt="Picture of the logo"
+        // width={500} automatically provided
+        // height={500} automatically provided
+        // blurDataURL="data:..." automatically provided
+        // placeholder="blur" // Optional blur-up while loading
+      />
+      <img
+        src={logoImage.src}
+      />
+    </>
+  )
+}
+
+export default HomePage;
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+13) Font Optimization in NextJS
+--------------------------------------------------------------
+
+=> Fonts play a significant role in the design of a website, but using custom fonts in your project can affect performance if the font files need to be fetched and loaded.
+
+=> next/font will automatically optimize your fonts (including custom fonts) and remove external network requests for improved privacy and performance.
+
+Or,
+
+=> Next.js automatically optimizes fonts in the application when you use the next/font module. It downloads font files at build time and hosts them with your other static assets. This means when a user visits your application, there are no additional network requests for fonts which would impact performance.
+
+=> Next.js has built-in Automatic Webfont Optimization. By default, Next.js will automatically inline font CSS at build time, eliminating an extra round trip to fetch font declarations. This results in improvements to First Contentful Paint (FCP) and Largest Contentful Paint (LCP).
+
+=> next/font includes built-in automatic self-hosting for any font file. This means you can optimally load web fonts with zero layout shift, thanks to the underlying CSS size-adjust property used.
+
+=> For font property visit the link -- "https://nextjs.org/docs/pages/api-reference/components/font"
+
+Example 1 -- Using Google Fonts in NextJS
+--------------------------------------------------
+
+src/app/page.jsx
+---------------------------------------
+
+import React from 'react';
+import { Montserrat } from 'next/font/google';
+
+const montserrat = Montserrat({
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const HomePage = () => {
+  return (
+      <h1 className={montserrat.className}>Hello NextJS</h1>
+  )
+}
+
+export default HomePage;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 2 -- Using Local Fonts in NextJS
+--------------------------------------------------
+
+=> Import next/font/local and specify the src of your local font file. We recommend using variable fonts for the best performance and flexibility.
+
+=> Variable fonts allow one font file to contain multiple variations. You can change the weight, width, style, optical size, and more. The variables within variable fonts are controlled by axes.
+
+src/app/page.jsx
+---------------------------------------
+
+import React from 'react';
+import localFont from 'next/font/local'
+
+const montserrat = localFont({
+  src: [
+    {
+      path: './fonts/Montserrat-Regular.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './fonts/Montserrat-Light.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './fonts/Montserrat-Medium.ttf',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: './fonts/Montserrat-Bold.ttf',
+      weight: '700',
+      style: 'bold',
+    },
+  ],
+})
+
+const HomePage = () => {
+  return (
+      <h1 className={montserrat.className}>Hello NextJS</h1>
+  )
+}
+
+export default HomePage;
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+14) Metadata and Dynamic Metadata in NextJS
+--------------------------------------------------------------
+
+14.1) Metadata in NextJS 
+---------------------------------------------------------
+
+=> Metadata is information about the data on your web page and is essential for SEO (Search Engine Optimization) and social media sharing.
+
+Or,
+
+=> In web development, metadata provides additional details about a webpage. Metadata is not visible to the users visiting the page. Instead, it works behind the scenes, embedded within the page's HTML, usually within the <head> element. This hidden information is crucial for search engines and other systems that need to understand your webpage's content better.
+
+=> In the context of a web page, metadata is information about the page that is not directly shown to users but can be useful for search engines, browsers, and other technologies.
+
+=> For example, the title of a web page, its description, the author, keywords, and other similar details are all metadata. These are specified in the <head> of your HTML document using elements like <title>, <meta>, etc.
+
+=> Metadata is crucial for both SEO and social media sharing.
+
+>> SEO: Metadata, such as the title and description, is essential for search engines to understand your page's content and display it appropriately in search results.
+
+>> Social Media: Metadata like og:title, og:description, and og:image are important for how your content is displayed when shared on platforms like Facebook and Twitter.
+
+14.1.1) Types of Metadata in NextJS 
+---------------------------------------------------------
+
+=> There are various types of metadata, each serving a unique purpose. Some common types include :-
+
+a) Title Metadata
+------------------------------------
+
+>> Responsible for the title of a webpage that is displayed on the browser tab. It's crucial for SEO as it helps search engines understand what the webpage is about.
+
+<title>Page Title</title>
+
+b) Description Metadata
+------------------------------------
+
+>> This metadata provides a brief overview of the webpage content and is often displayed in search engine results.
+
+<meta name="description" content="A brief description of the page content." />
+<meta name="robots" content="index, follow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8" />
+
+c) Keyword Metadata
+------------------------------------
+
+>> This metadata includes the keywords related to the webpage content, helping search engines index the page.
+
+<meta name="keywords" content="keyword1, keyword2, keyword3" />
+
+d) Open Graph Metadata
+------------------------------------
+
+>> This metadata enhances the way a webpage is represented when shared on social media platforms, providing information such as the title, description, and preview image.
+
+<meta property="og:title" content="Title Here" />
+<meta property="og:description" content="Description Here" />
+<meta property="og:image" content="image_url_here" />
+
+e) Favicon Metadata
+------------------------------------
+
+>> This metadata links the favicon (a small icon) to the webpage, displayed in the browser's address bar or tab.
+
+<link rel="icon" href="path/to/favicon.ico" />
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+14.1.2) Ways to Add Metadata in NextJS 
+---------------------------------------------------------
+
+=> There are two ways you can add metadata to your application that includes :-
+
+>> Config-based Metadata -- Export a static metadata object or a dynamic generateMetadata function in a "layout.js" or "page.js" file.
+
+>> File-based Metadata -- Add static or dynamically generated special files to route segments.
+
+=> With both these options, Next.js will automatically generate the relevant <head> elements for your pages. You can also create dynamic OG images using the ImageResponse constructor.
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+14.1.3) Static Metadata in NextJS 
+---------------------------------------------------------
+
+Example 1 -- Static Metadata in NextJS 
+----------------------------------------------------
+
+=> To generate static metadata, export a "Metadata" object from a layout.js or static page.js file.
+
+import type { Metadata } from 'next'
+ 
+export const metadata: Metadata = {
+  title: '...',
+  description: '...',
+}
+ 
+export default function Page() {}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+14.2) Dynamic Metadata in NextJS 
+---------------------------------------------------------
+
+=> Dynamic metadata refers to metadata that changes based on the page's content. For instance, you might have a blog with multiple posts and you want each post to have its own title and description when shared on social media. This can be achieved with dynamic metadata.
+
+=> Next.js uses the Head component from next/head to add elements to the <head> of your HTML page. You can use this component to add metadata and dynamic metadata to your pages.
+
+=> To generate dynamic metadata, export a "generateMetadata" / "Metadata" / "Viewport" / "generateViewport" function from a layout.js or static page.js file.
+
+
+Example 2 -- Dynamic Metadata in NextJS 
+----------------------------------------------------
+
+import React from 'react';
+
+
+const HomePage = () => {
+  return (
+      <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, pariatur molestias, tempora quibusdam enim aut corrupti aliquam aperiam temporibus natus esse amet dolore consequuntur nihil veritatis explicabo? Facilis, vitae debitis?</h1>
+  )
+}
+
+export const generateMetadata = () => {
+  return{
+    title:"Home page Title",
+    description: 'The React Framework for the Web',
+    generator: 'Next.js',
+    applicationName: 'Next.js',
+    referrer: 'origin-when-cross-origin',
+    keywords: ['Next.js', 'React', 'JavaScript'],
+    authors: [{ name: 'Seb' }, { name: 'Josh', url: 'https://nextjs.org' }],
+    creator: 'Jiachi Liu',
+    publisher: 'Sebastian Markbåge',
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
+    metadataBase: new URL('https://acme.com'),
+    alternates: {
+      canonical: '/',
+      languages: {
+        'en-US': '/en-US',
+        'de-DE': '/de-DE',
+      },
+    },
+    openGraph: {
+      title: 'Next.js',
+      description: 'The React Framework for the Web',
+      type: 'article',
+      publishedTime: '2023-01-01T00:00:00.000Z',
+      authors: ['Seb', 'Josh'],
+      url: 'https://nextjs.org',
+      siteName: 'Next.js',
+      images: [
+        {
+          url: 'https://nextjs.org/og.png', // Must be an absolute URL
+          width: 800,
+          height: 600,
+        },
+        {
+          url: 'https://nextjs.org/og-alt.png', // Must be an absolute URL
+          width: 1800,
+          height: 1600,
+          alt: 'My custom alt',
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    robots: {
+      index: false,
+      follow: true,
+      nocache: true,
+      googleBot: {
+        index: true,
+        follow: false,
+        noimageindex: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    icons: {
+      icon: '../../public/vercel.svg',
+      shortcut: '../../public/vercel.svg',
+      apple: '../../public/vercel.svg',
+      other: {
+        rel: 'apple-touch-icon-precomposed',
+        url: '../../public/vercel.svg',
+      },
+    },
+    manifest: 'https://nextjs.org/manifest.json',
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Next.js',
+      description: 'The React Framework for the Web',
+      siteId: '1467726470533754880',
+      creator: '@nextjs',
+      creatorId: '1467726470533754880',
+      images: ['https://nextjs.org/og.png'], // Must be an absolute URL
+    },
+    assets: ['https://nextjs.org/assets'],
+    bookmarks: ['https://nextjs.org/13'],
+  }
+}
+
+export const generateViewport = () => {
+  return {
+    // themeColor: 'black',
+    themeColor: [
+      { media: '(prefers-color-scheme: light)', color: 'cyan' },
+      { media: '(prefers-color-scheme: dark)', color: 'black' },
+    ],
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+    colorScheme: 'dark',
+  }
+}
+
+export default HomePage;
+
+{/* 
+<title>Home page Title</title>
+<meta name="description" content="The React Framework for the Web" />
+<meta name="application-name" content="Next.js" />
+<meta name="author" content="Seb" />
+<link rel="author" href="https://nextjs.org" />
+<meta name="author" content="Josh" />
+<meta name="generator" content="Next.js" />
+<meta name="keywords" content="Next.js,React,JavaScript" />
+<meta name="referrer" content="origin-when-cross-origin" />
+<meta name="color-scheme" content="dark" />
+<meta name="creator" content="Jiachi Liu" />
+<meta name="publisher" content="Sebastian Markbåge" />
+<meta name="format-detection" content="telephone=no, address=no, email=no" /> 
+<link rel="canonical" href="https://acme.com" />
+<link rel="alternate" hreflang="en-US" href="https://acme.com/en-US" />
+<link rel="alternate" hreflang="de-DE" href="https://acme.com/de-DE" />
+<meta property="og:image" content="https://acme.com/og-image.png" />
+<meta property="og:title" content="Next.js" />
+<meta property="og:description" content="The React Framework for the Web" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-01-01T00:00:00.000Z" />
+<meta property="article:author" content="Seb" />
+<meta property="article:author" content="Josh" />
+<meta property="og:url" content="https://nextjs.org/" />
+<meta property="og:site_name" content="Next.js" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:image:url" content="https://nextjs.org/og.png" />
+<meta property="og:image:width" content="800" />
+<meta property="og:image:height" content="600" />
+<meta property="og:image:url" content="https://nextjs.org/og-alt.png" />
+<meta property="og:image:width" content="1800" />
+<meta property="og:image:height" content="1600" />
+<meta property="og:image:alt" content="My custom alt" />
+<meta property="og:type" content="website" />
+<meta name="robots" content="noindex, follow, nocache" />
+<meta
+  name="googlebot"
+  content="index, nofollow, noimageindex, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+/>
+<link rel="shortcut icon" href="/shortcut-icon.png" />
+<link rel="icon" href="/icon.png" />
+<link rel="apple-touch-icon" href="/apple-icon.png" />
+<link
+  rel="apple-touch-icon-precomposed"
+  href="/apple-touch-icon-precomposed.png"
+/>
+<link rel="manifest" href="https://nextjs.org/manifest.json" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site:id" content="1467726470533754880" />
+<meta name="twitter:creator" content="@nextjs" />
+<meta name="twitter:creator:id" content="1467726470533754880" />
+<meta name="twitter:title" content="Next.js" />
+<meta name="twitter:description" content="The React Framework for the Web" />
+<meta name="twitter:image" content="https://nextjs.org/og.png" />
+<link rel="assets" href="https://nextjs.org/assets" />
+<link rel="bookmarks" href="https://nextjs.org/13" />
+
+=============== Viewport =============================
+
+<meta name="theme-color" content="black" />
+
+Or,
+
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="cyan" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+/>
+<meta name="color-scheme" content="dark" />
+*/}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+14.3) Sitemaps in NextJS 
+---------------------------------------------------------
+
+=> sitemap.(xml|js|ts) is a special file that matches the Sitemaps XML format to help search engine crawlers index your site more efficiently.
+
+=> For smaller applications, you can create a sitemap.xml file and place it in the root of your app directory.
+
+=> You can use the sitemap.(js|ts) file convention to programmatically generate a sitemap by exporting a default function that returns an array of URLs. If using TypeScript, a Sitemap type is available.
+
+=> We can also use the "generateSitemaps" function to generate multiple sitemaps for your application. The generateSitemaps returns an array of objects with an id property.
+
+Example 1 - Using Default Function
+----------------------------------------------------
+
+import { MetadataRoute } from 'next'
+ 
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
+    {
+      url: 'https://acme.com',
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 1,
+    },
+    {
+      url: 'https://acme.com/about',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://acme.com/blog',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.5,
+    },
+  ]
+}
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+15) Script Component in NextJS
+--------------------------------------------------------------
+
+=> The ‘<Script>’ component is a way to include external scripts or libraries in your application. It is often used for loading third-party scripts or adding custom scripts to specific pages.
+
+=> We can use "next/script" in order to import scripts in our NextJS application.
+
+Example -- Simple Example 
+------------------------------------------------------
+
+import Script from 'next/script'
+
+export default function Dashboard() {
+  return (
+    <>
+      <Script src="./hello.js" />
+    </>
+  )
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+15.1) Props in Script Component
+------------------------------------------------------
+
+a) src 
+---------------------------------------
+
+>> It is required prop in <Script> Component. This prop define the external javascript url.
+
+Example -- with "src" Prop 
+------------------------------------------------------
+
+import Script from 'next/script'
+
+export default function Dashboard() {
+  return (
+    <>
+      <Script src="./hello.js" />
+    </>
+  )
+}
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+a) strategy 
+---------------------------------------
+
+>> This prop allow you to control the behaviour of loading and executing the external script.
+
+Example -- with strategy prop
+-----------------------------------
+
+import Script from "next/script";
+
+export default function Page() {
+    return (
+        <>
+            <Script
+                src='https://external-script-source.com/script.js'
+                strategy='worker'
+            />
+        </>
+    );
+}
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+a) onLoad 
+---------------------------------------
+
+>> Execute code after the script has finished loading.
+
+Example -- with onLoad prop
+-----------------------------------
+
+"use client";
+
+import Script from "next/script";
+
+export default function HomePage() {
+    return (
+        <div>
+            <h2>Script tag will be used </h2>
+            <Script
+                src="https://connect.facebook.net/en_US/sdk.js"
+                // strategy="lazyOnload"
+                onLoad={() =>
+                    console.log(`script loaded correctly, window.FB has been populated`)
+                }
+            />
+        </div>
+    );
+}
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+a) onReady 
+---------------------------------------
+
+>> Execute code after the script has finished loading and every time the component is mounted.
+
+Example -- with onReady prop
+-----------------------------------
+
+"use client";
+
+import Script from "next/script";
+
+export default function Page() {
+    return (
+        <>
+            <Script
+                src='./hello.js'
+                // strategy='worker'
+                onReady={() => {
+                    console.info("External Script is ready for use");
+                }}
+            />
+        </>
+    );
+}
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+a) onError 
+---------------------------------------
+
+>> It is optional prop, This event occurs when your script fails to load.
+
+NOTE :- These props (except src) will only work when "next/script" when it is imported and used inside of a Client Component where "use client" is defined as the first line of code.
+
+Example -- with onError prop
+-----------------------------------
+
+"use client";
+
+import Script from "next/script";
+
+export default function Page() {
+    return (
+        <>
+            <Script
+                src='https://external-script-source.com/script.js'
+                // strategy='worker'
+                onError={() => {
+                    console.error("An error has occurred");
+                }}
+            />
+        </>
+    );
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+15.2) Additional Props in Script Component
+------------------------------------------------------
+
+=> There are many DOM attributes that can be assigned to a <script> element that are not used by the Script component that includes :-
+
+>> nonce -- The nonce global attribute is a content attribute defining a cryptographic nonce ("number used once") which can be used by Content Security Policy to determine whether or not a given fetch will be allowed to proceed for a given element.
+
+>> id -- The id global attribute defines an identifier (ID) which must be unique in the whole document. Its purpose is to identify the element when linking (using a fragment identifier), scripting, or styling (with CSS).
+
+>> data-test -- The data-* global attributes form a class of attributes called custom data attributes, that allow proprietary information to be exchanged between the HTML and its DOM representation by scripts.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+15.3) Script Component Strategy
+------------------------------------------------------
+
+=> Although the default behavior of next/script allows you to load third-party scripts in any page or layout, you can fine-tune its loading behavior by using the strategy property.
+
+Or,
+
+=> The ‘strategy’ property allows you to control how the script is loaded and executed.
+
+=> The ‘strategy’ property accepts four values that includes :-
+
+a) beforeInteractive
+---------------------------------------
+
+>> This strategy is used for scripts that need to execute before the page’s content Interactive. This script is always downloaded prior to any NextJS module and then run in the sequence they appear.
+
+Example -- with beforeInteractive
+-----------------------------------
+
+import Script from 'next/script';
+
+const MyPage = () => {
+    return (
+        <div>
+            <h1>My Page</h1>
+            {/* Script with hypothetical "beforeInteractive" behavior */}
+            <Script src="./hello.js" beforeInteractive />
+        </div>
+    );
+};
+
+export default MyPage;
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+b) afterInteractive (default)
+---------------------------------------
+
+>> This ‘afterInteractive‘ strategy in NextJS ‘<Script/>’ component allow you to specify that a script should be executed after that page’s content becomes interactive. This is the default strategy of the Script Component in NextJS afterInteractive scripts can be placed of any page or layout and will only load and execute when that page is opend in the browser.
+
+Example -- with afterInteractive
+-----------------------------------
+
+import Script from 'next/script'
+
+export default function Page() {
+    return (
+        <>
+            <Script src="./hello.js" afterInteractive />
+        </>
+    )
+}
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+c) lazyOnload
+---------------------------------------
+
+>> The ‘lazyOnload‘ strategy in NextJS ‘<Script/>’ component allows you to defer the loading and execution of a script until after all other resources (such as HTML , CSS, and other scripts) have finshed loading. It is benefical for improving page load perfomance.
+
+Example -- with lazyOnload
+-----------------------------------
+
+import Script from 'next/script';
+
+const MyPage = () => {
+    return (
+        <div>
+            <h1>My Page</h1>
+            {/* Script loaded with lazyOnload strategy */}
+            <Script src="https://example.com/lazy-load-script.js"
+                strategy="lazyOnload" />
+        </div>
+    );
+};
+
+export default MyPage;
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+d) worker
+---------------------------------------
+
+>> The ‘worker‘ strategy in NextJS ‘<Script/>’ component allows freeing up the main thread to process only critcal first party resource first. It’s an advanced usage senario and may not support all third party scripts.
+
+>> If you want to use worker as a strategy, is to enable the nextScriptWorker flag in the next.config.js
+
+Example -- with worker
+-----------------------------------
+
+next.config.js 
+--------------------------------
+
+module.exports = {
+    experimental: {
+        nextScriptWorkers: true,
+    },
+}
+
+import Script from "next/script";
+
+export default function Page() {
+    return (
+        <>
+            <Script
+                src='https://external-script-source.com/script.js'
+                strategy='worker'
+            />
+        </>
+    );
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+15.4) Inline Scripts with Script Component
+------------------------------------------------------
+
+>> Inline scripts, or scripts not loaded from an external file, are also supported by the Script component. They can be written by placing the JavaScript within curly braces :-
+
+Example -- Inline Scripts
+--------------------------------------------
+
+"use client";
+
+import Script from "next/script";
+
+export default function Page() {
+    return (
+        <>
+            <div id="banner" >Hello ReactJS</div>
+            <Script id="show-banner">
+              {`document.getElementById('banner').innerHTML = "Hello NextJS"`}
+            </Script>
+        </>
+    );
+}
+
+Example -- Inline Scripts
+--------------------------------------------
+
+"use client";
+
+import Script from "next/script";
+
+export default function Page() {
+    return (
+        <>
+            <div id="banner" >Hello ReactJS</div>
+            <Script
+              id="show-banner"
+              dangerouslySetInnerHTML={{
+                __html: `document.getElementById('banner').innerHTML = "Hello NextJS Framework"`,
+              }}
+            />
+        </>
+    );
+}
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+16) Loading Component in NextJS
+---------------------------------------------------------------
+
+16.1) Loading without Streaming Suspense
+-------------------------------------------------------------
+
+=> In addition to "loading.js", you can also manually create Suspense Boundaries for your own UI components.
+
+=> The special file "loading.js" file helps you create meaningful Loading UI with React Suspense. With this convention, you can show an instant loading state from the server while the content of a route segment loads. The new content is automatically swapped in once rendering is complete.
+
+Or,
+
+=> We can add loading state by adding a "loading.js" file inside a folder.
+
+=> By default, this file is a Server Component - but can also be used as a Client Component through the "use client" directive.
+
+=> If you add "loading.js" file inside a folder then it will automatically wrap the "page.js" file and any children below in a <Suspense> boundary.
+
+Example -- Loading without Streaming Suspense
+----------------------------------------------------------
+
+src/app/page.jsx 
+----------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to Products Page" href="/products"/>
+    </>
+  );
+}
+
+src/app/products/page.jsx 
+----------------------------------------
+
+import { ProductInfo } from "./productInfo";
+
+const productsData = async () => {
+  const apiResponseData = await fetch("https://dummyjson.com/products");
+  const productsData = await apiResponseData.json();
+  return productsData.products;
+};
+
+const ProductsListData = async () => {
+  const productsListData = await productsData();
+  return (
+    <>
+      <h1>Products List</h1>
+      {productsListData && productsListData.length > 0 ? (
+        productsListData.map((item, index) => (
+          <ProductInfo key={index} productData={item} />
+        ))
+      ) : (
+        <h3>No Data Found !!</h3>
+      )}
+    </>
+  );
+};
+
+export default ProductsListData;
+
+src/app/products/productInfo.jsx 
+----------------------------------------
+
+"use client";
+import React, { useState } from "react";
+
+export const ProductInfo = ({ productData }) => {
+  const [productPrice, setProductPrice] = useState(false);
+  return (
+    <>
+      <h3>Name: {productData.title}</h3>
+      {productPrice ? <h3>Price: {productData.price}</h3> : <></>}
+      <button onClick={() => setProductPrice(!productPrice)}>
+        {productPrice ? "Hide Price" : "Show Price"}
+      </button>
+    </>
+  );
+};
+
+src/app/products/loading.jsx 
+----------------------------------------
+
+import React from 'react'
+
+const Loading = () => {
+  return (
+    <h1>Loading....</h1>
+  )
+}
+
+export default Loading;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+16.2) Loading with Streaming Suspense (React Model)
+-------------------------------------------------------------
+
+=> In order to understand how Streaming works in React and Next.js, it's helpful to understand Server-Side Rendering (SSR) and its limitations.
+
+=> Streaming allows you to break down the page's HTML into smaller chunks and progressively send those chunks from the server to the client. This enables parts of the page to be displayed sooner, without waiting for all the data to load before any UI can be rendered.
+
+=> With SSR, there's a series of steps that need to be completed before a user can see and interact with a page:
+
+>> First, all data for a given page is fetched on the server.
+>> The server then renders the HTML for the page.
+>> The HTML, CSS, and JavaScript for the page are sent to the client.
+>> A non-interactive user interface is shown using the generated HTML, and CSS.
+>> Finally, React hydrates the user interface to make it interactive.
+
+=> These steps are sequential and blocking, meaning the server can only render the HTML for a page once all the data has been fetched. And, on the client, React can only hydrate the UI once the code for all components in the page has been downloaded.
+
+=> Streaming works well with React's component model because each component can be considered a chunk. Components that have higher priority (e.g. product information) or that don't rely on data can be sent first (e.g. layout), and React can start hydration earlier. Components that have lower priority (e.g. reviews, related products) can be sent in the same server request after their data has been fetched.
+
+=> Streaming is particularly beneficial when you want to prevent long data requests from blocking the page from rendering as it can reduce the Time To First Byte (TTFB) and First Contentful Paint (FCP). It also helps improve Time to Interactive (TTI), especially on slower devices.
+
+=> By using Suspense, you get the benefits of:
+
+>> Streaming Server Rendering - Progressively rendering HTML from the server to the client.
+>> Selective Hydration - React prioritizes what components to make interactive first based on user interaction.
+
+Example -- Loading with Streaming Suspense
+----------------------------------------------------------
+
+src/app/page.jsx 
+----------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <Link children="Go to Products Page" href="/products"/>
+    </>
+  );
+}
+
+src/app/products/page.jsx 
+----------------------------------------
+
+import { Suspense } from "react"
+import { ProductsListData } from "./productList"
+import Loading from "./loading"
+
+const ProductData = () => {
+  return(
+    <Suspense fallback={<Loading/>}>
+      <ProductsListData/>
+    </Suspense>
+  )
+}
+
+export default ProductData;
+
+src/app/products/productList.jsx 
+----------------------------------------
+
+import { ProductInfo } from "./productInfo";
+
+const productsData = async () => {
+  const apiResponseData = await fetch("https://dummyjson.com/products");
+  const productsData = await apiResponseData.json();
+  return productsData.products;
+};
+
+export const ProductsListData = async () => {
+  const productsListData = await productsData();
+  return (
+    <>
+      <h1>Products List</h1>
+      {productsListData && productsListData.length > 0 ? (
+        productsListData.map((item, index) => (
+          <ProductInfo key={index} productData={item} />
+        ))
+      ) : (
+        <h3>No Data Found !!</h3>
+      )}
+    </>
+  );
+};
+
+src/app/products/productInfo.jsx 
+----------------------------------------
+
+"use client";
+import React, { useState } from "react";
+
+export const ProductInfo = ({ productData }) => {
+  const [productPrice, setProductPrice] = useState(false);
+  return (
+    <>
+      <h3>Name: {productData.title}</h3>
+      {productPrice ? <h3>Price: {productData.price}</h3> : <></>}
+      <button onClick={() => setProductPrice(!productPrice)}>
+        {productPrice ? "Hide Price" : "Show Price"}
+      </button>
+    </>
+  );
+};
+
+src/app/products/loading.jsx 
+----------------------------------------
+
+import React from 'react'
+
+const Loading = () => {
+  return (
+    <h1>Loading Data ...</h1>
+  )
+}
+
+export default Loading;
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+17) Error Handling in NextJS
+---------------------------------------------------------------
+
+=> The "error.js" file convention allows you to gracefully handle unexpected runtime errors in nested routes.
+
+=> With "error.js" file we can :-
+
+>> Automatically wrap a route segment and its nested children in a React Error Boundary.
+>> Create error UI tailored to specific segments using the file-system hierarchy to adjust granularity.
+>> Isolate errors to affected segments while keeping the rest of the application functional.
+>> Add functionality to attempt to recover from an error without a full page reload.
+
+=> Create error UI by adding an "error.js" file inside a route segment and exporting a React component.
+
+=> All error components create with NextJS must be client component.
+
+=> If an error is thrown inside a Server Component, Next.js will forward an Error object (stripped of sensitive error information in production) to the nearest "error.js" file as the error prop.
+
+=> "error.js" creates a React Error Boundary around a specific component or page.js. It uses the exported React component from error.js as a backup. If an error occurs within this boundary, it's isolated, and the backup component is shown.
+
+=> If an error is temporary, retrying might fix it. Using the reset() function in an error component prompts users to try again. When reset() the Error Boundary attempts to re-render its contents. If successful, the fallback error component is replaced with the new result.
+
+17.1) Handling Errors in Nested Layouts 
+-----------------------------------------------------
+
+=> "error.js" automatically creates a React Error Boundary that wraps a nested child segment or page.js component.
+
+=> The React component exported from the "error.js" file is used as the fallback component.
+
+=> If an error is thrown within the error boundary, the error is contained, and the fallback component is rendered.
+
+=> When the fallback error component is active, layouts above the error boundary maintain their state and remain interactive, and the error component can display functionality to recover from the error.
+
+Example 1 -- Handling Errors in Nested Layouts
+-------------------------------------------------
+
+src/app/products/error.jsx 
+----------------------------------------
+
+'use client' // Error components must be Client Components
+
+import { useEffect } from 'react'
+
+export default function Error({
+  error,
+  reset,
+}) {
+  useEffect(() => {
+    console.error(error)
+  }, [error])
+
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <button
+        onClick={
+          () => reset()
+        }
+      >
+        Try again
+      </button>
+    </div>
+  )
+}
+
+17.2) Handling Errors in Global Layouts
+-----------------------------------------------------
+
+=> Error boundaries defined "error.js|jsx" do not capture errors occurring in "layout.js|jsx" or "template.js|jsx" components within the same segment. This hierarchy is deliberate, ensuring that crucial UI elements shared among sibling routes, like navigation, remain accessible and usable during errors.
+
+=> To manage errors within a particular layout or template, include an "error.js|jsx" file in the parent segment of that layout.
+
+=> For handling errors within the root layout or template, utilize a variant named "global-error.js|jsx".
+
+=> Handling errors on root layout works like :-
+
+>> The root "app/error.js|jsx" boundary doesn't handle errors from root "app/layout.js|jsx" or "app/template.js|jsx "components.
+
+>> For handling errors in these root components, utilize a variant named "app/global-error.js|jsx," placed in the root app directory.
+
+>> Unlike "app/error.js|jsx", "global-error.js|jsx" wraps the entire application, replacing the root layout with its fallback component when active. Thus, "global-error.js|jsx" must include its own and tags.
+
+>> "global-error.js|jsx" serves as broad error handling for the entire application, less frequently triggered due to the static nature of root components. However, it's still advisable to have a root "error.js|jsx" file defining a fallback component within the root layout for consistent UI and branding.
+
+Example 1 -- Handling Errors in Global Layouts
+-------------------------------------------------
+
+src/app/global-error.jsx 
+----------------------------------------
+
+"use client"
+
+export default function GlobalError({
+    error,
+    reset,
+  }) {
+    return (
+      <html>
+        <body>
+          <h2>Something went wrong!</h2>
+          <button onClick={() => reset()}>Try again</button>
+        </body>
+      </html>
+    )
+}
+
+17.3) Handling Server Errors
+-----------------------------------------------------
+
+=> When a Server Component encounters an error, Next.js forwards an Error object (with sensitive details removed in production) to the nearest error.js|jsx file as the error prop.
+
+=> To protect sensitive data, in production, only a generic message and a digest property are sent to the client. The digest is a hash of the error useful for matching with server-side logs.
+
+=> In development, the Error object sent to the client includes the original error message for easier debugging.
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+18) Static Assets in NextJS
+---------------------------------------------------------------
+
+=> Next.js can serve static files, like images, under a folder called public in the root directory. Files inside public can then be referenced by your code starting from the base URL (/). For example, the file public/avatars/me.png can be viewed by visiting the /avatars/me.png path. 
+
+=> For static metadata files, such as robots.txt, favicon.ico, etc, you should use special metadata files inside the app folder.
+
+=> The directory where our static assets were placed named as "public". The name cannot be changed and it's the only directory used to serve static assets.
+
+=> Only assets that are in the public directory at build time will be served by Next.js. Files added at request time won't be available.
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+19) Production Build in NextJS
+---------------------------------------------------------------
+
+=> Running next build generates an optimized version of your application for production. HTML, CSS, and JavaScript files are created based on your pages.
+
+=> JavaScript is compiled and browser bundles are minified using the Next.js Compiler to help achieve the best performance and support all modern browsers.
+
+=> Command to create production build -- "npm run build"
+=> Command to run production build -- "npm start"
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+20) NextJS Static Exports
+---------------------------------------------------------------
+
+=> Next.js enables starting as a static site or Single-Page Application (SPA), then later optionally upgrading to use features that require a server.
+
+Or,
+
+=> Next.js enables us to develop static HTML exports by using the (SSG) feature which is “Static Site Generation“. In SSG, the web pages are rendered at the build time and generate the HTML files for each page.
+
+=> In simple terms, when the user visits our developed website, they are served pre-rendered HTML pages, which improves the performance of our website.
+
+=> When running next build, Next.js generates an HTML file per route. By breaking a strict SPA into individual HTML files, Next.js can avoid loading unnecessary JavaScript code on the client-side, reducing the bundle size and enabling faster page loads.
+
+=> Since Next.js supports this static export, it can be deployed and hosted on any web server that can serve HTML/CSS/JS static assets.
+
+=> To enable a static export, change the output mode inside next.config.js as shown below : 
+
+const nextConfig = {
+    output: 'export',
+};
+
+export default nextConfig;
+
+=> After running "next build / npm run build", Next.js will produce an "out folder" which contains the HTML/CSS/JS assets for your application.
+
+Or,
+
+=> Command to generate static build -- "npm run build"
+=> Command to run static build -- "npx serve@latest out"
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+20) NextJS Static Site Generation with Dynamic Path
+---------------------------------------------------------------
+
+=> The "generateStaticParams" function can be used in combination with dynamic route segments to statically generate routes at build time instead of on-demand at request time.
+
+Or,
+
+=> The "generateStaticParams" function allows for the static generation of routes during the build process, when used alongside dynamic route segments, rather than dynamically generating them upon request.”
+
+=> "generateStaticParams" should return an array of objects where each object represents the populated dynamic segments of a single route.
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+21) Redirection in NextJS
+---------------------------------------------------------------
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+22) Environment Variables in NextJS
+---------------------------------------------------------------
+
+=> Environment variables in Next.js are a way to set configuration values that are used by your application. They can be used to store data such as the name of your company, the port your application will run on, or any other configuration values you need.
+
+=> Next.js has built-in support for loading environment variables from ".env.local" into "process.env.[variableName]".
+
+=> Next.js allows you to set defaults in ".env" (all environments), ".env.development" (development environment), ".env.production" (production environment), ".env.testing" (testing environment) but ".env.local" always overrides the defaults set.
+
+=> .env, .env.development, and .env.production files should be included in your repository as they define defaults. .env*.local should be added to .gitignore, as those files are intended to be ignored. .env.local is where secrets can be stored.
+
+=> By default, environment variables are only available on the server. To expose an environment variable to the browser, it must be prefixed with "NEXT_PUBLIC_". However, these public environment variables will be inlined into the JavaScript bundle during next build.
+
+Example -- Using Environment Variables
+-------------------------------------------------------
+
+.env.local
+--------------------------------------
+
+BASE_URL="www.baseURL.com"
+PROD_URL="www.prodURL.com"
+DB_NAME="Rohit DB"
+DB_PASS="Rohit@1993"
+
+src/app/config/config.js|ts
+--------------------------------------
+
+export const API_URL = process.env.NODE_ENV === "development" ? process.env.BASE_URL : process.env.PROD_URL
+export const DB_NAME = process.env.NODE_ENV === "development" ? process.env.DEV_DB_NAME : process.env.PROD_DB_NAME
+
+src/app/page.jsx
+--------------------------------------
+
+import { API_URL, DB_NAME } from "./config/config";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS Navigation</h1>
+      <h3>API URL : {API_URL}</h3>
+      <h3>DB Name : {DB_NAME}</h3>
+    </>
+  );
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example -- Referencing Environment Variables
+-------------------------------------------------------
+
+=> Next.js will automatically expand variables that use $ to reference other variables e.g. $VARIABLE inside of your .env* files. This allows you to reference other secrets.
+
+.env.local
+--------------------------------------
+
+TWITTER_USER=nextjs
+TWITTER_URL=https://twitter.com/$TWITTER_USER
+
+*********************************************************************************************************************************************************************************************************************************************************************************
+
+23) API Routes in NextJS
+---------------------------------------------------------------
+
+=> Next.js allows you to create API routes, which are server-side endpoints that can handle HTTP requests and perform server-side logic.
+
+=> To create an API route, you need to create a file inside the "pages/api" directory. The file name becomes the route path, and the default export is a request handler function.
+
+=> For creating route using NextJS the file name should be "route.js|ts" and in order to get the response and request we need to use "NextResponse" and "NextRequest" from "next/server". Also the method through which we are returning API responses must be name like "GET / POST / PUT / PATCH / DELETE"
+
+Example 1 -- Creating Simple API Routes 
+---------------------------------------------------------
+
+src/app/api/products/route.js 
+----------------------------------------------
+
+import { NextResponse } from "next/server";
+
+export const GET = async() => {
+    return NextResponse.json({ message: 'Hello NextJS' },{status:200});
+}
+
+>> API Route Name -- "http://localhost:3000/api/products"
+>> NOTE :- We can test the above api route on postman with GET Request.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+23.1) Creating and Using GET API using NextJS 
+-------------------------------------------------
+
+Example 1 -- GET api with fake database 
+----------------------------------------------
+
+src/util/db.js
+---------------------------------------
+
+export const users = [
+    {
+        id: "1",
+        name: "Rohit Singh",
+        email: "rohit@gmail.com"
+    },
+    {
+        id: "2",
+        name: "Rahul Singh",
+        email: "rahul@gmail.com"
+    },
+    {
+        id: "3",
+        name: "Rishabh Singh",
+        email: "rishabh@gmail.com"
+    },
+    {
+        id: "4",
+        name: "Ankit Singh",
+        email: "ankit@gmail.com"
+    },
+]
+
+src/app/api/users/route.js 
+----------------------------------------------
+
+import { NextResponse } from "next/server";
+import { users } from "@/utils/db";
+
+export const GET = async() => {
+    return NextResponse.json(users,{status:200});
+}
+
+>> API Route Name -- "http://localhost:3000/api/users"
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Example 2 -- GET api with query params
+----------------------------------------------
+
+=> In order to get the query params data, we can get it from "content" parameter.
+
+Or,
+
+=> Currently, the only value of context is params, which is an object containing the dynamic route parameters for the current route.
+
+src/util/db.js
+---------------------------------------
+
+export const users = [
+    {
+        id: "1",
+        name: "Rohit Singh",
+        email: "rohit@gmail.com"
+    },
+    {
+        id: "2",
+        name: "Rahul Singh",
+        email: "rahul@gmail.com"
+    },
+    {
+        id: "3",
+        name: "Rishabh Singh",
+        email: "rishabh@gmail.com"
+    },
+    {
+        id: "4",
+        name: "Ankit Singh",
+        email: "ankit@gmail.com"
+    },
+]
+
+src/app/api/users/[id]/route.js 
+----------------------------------------------
+
+import { users } from "@/utils/db";
+import { NextResponse } from "next/server";
+
+export const GET = async(request,content) => {
+    const userData = users && users.filter((item) => item.id === content.params.id)
+    if(userData.length !== 0){
+        return NextResponse.json(userData,{status:200});
+    }
+    return NextResponse.json({message:"No data found"},{status:404});
+}
+
+>> API Route Name -- "http://localhost:3000/api/users/2" -- [In case of 200]
+>> API Route Name -- "http://localhost:3000/api/users/23" -- [In case of 404]
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Example 3 -- Consuming GET API on Frontend
+----------------------------------------------
+
+a) API Creation 
+-----------------------------------------
+
+src/util/db.js
+---------------------------------------
+
+export const users = [
+    {
+        id: "1",
+        name: "Rohit Singh",
+        email: "rohit@gmail.com"
+    },
+    {
+        id: "2",
+        name: "Rahul Singh",
+        email: "rahul@gmail.com"
+    },
+    {
+        id: "3",
+        name: "Rishabh Singh",
+        email: "rishabh@gmail.com"
+    },
+    {
+        id: "4",
+        name: "Ankit Singh",
+        email: "ankit@gmail.com"
+    },
+]
+
+src/app/api/users/[id]/route.js 
+----------------------------------------------
+
+import { users } from "@/utils/db";
+import { NextResponse } from "next/server";
+
+export const GET = async(request,content) => {
+    const userData = users && users.filter((item) => item.id === content.params.id)
+    if(userData.length !== 0){
+        return NextResponse.json(userData,{status:200});
+    }
+    return NextResponse.json({message:"No data found"},{status:404});
+}
+
+>> API Route Name -- "http://localhost:3000/api/users/2"
+
+b) Consuming GET API on Frontend
+-----------------------------------------
+
+src/app/page.jsx
+--------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS API Routes</h1>
+      <Link href="/users" children="Show Users"/> <br />
+      <Link href="/addUser" children="Add Users"/>
+    </>
+  );
+}
+
+src/app/users/page.jsx
+---------------------------------------
+
+import Link from "next/link";
+
+const getUsersData = async() => {
+    const data = await fetch("http://localhost:3000/api/users")
+    const userData = await data.json();
+    return userData
+}
+
+const UserList = async() => {
+    const userListData = await getUsersData();
+    
+    return(
+        <>
+           <h1>Users List</h1>
+           {
+            userListData && userListData.map((item,index) => (
+                <div key={index}>
+                    <Link href={`users/${item.id}`} children={item.name}/>
+                </div>
+            ))
+           }
+        </>
+    )
+}
+
+export default UserList;
+
+src/app/users/[userId]/page.jsx
+---------------------------------------
+
+import Link from "next/link";
+
+const getUser = async(id) => {
+    const data = await fetch(`http://localhost:3000/api/users/${id}`)
+    const userData = await data.json();
+    return userData[0]
+}
+
+const UserData = async({params}) => {
+    const userListData = await getUser(params.userId);
+    return(
+        <>
+           <h1>User Information</h1>
+           <h3>Name: {userListData.name}</h3>
+           <h3>Email: {userListData.email}</h3>
+        </>
+    )
+}
+
+export default UserData;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+23.2) Creating and Using POST API using NextJS 
+-------------------------------------------------
+
+a) Creating API 
+-----------------------------------------
+
+src/app/api/users/route.js 
+--------------------------------------
+
+import { users } from "@/utils/db";
+import { NextResponse } from "next/server";
+
+export const POST = async(request) => {
+    let payload = await request.json();
+    if(!payload.name || !payload.email){
+        return NextResponse.json({result:"No data found", success: false},{status:404});
+    }
+    return NextResponse.json({result:"New user created", success: true},{status:201});
+}
+
+>> API Route Name -- "http://localhost:3000/api/users/2"
+
+b) Consuming POST API on Frontend
+-----------------------------------------
+
+src/app/page.jsx
+--------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS API Routes</h1>
+      <Link href="/users" children="Show Users"/> <br />
+      <Link href="/addUser" children="Add Users"/>
+    </>
+  );
+}
+
+src/app/addUser/page.jsx
+--------------------------------------
+
+"use client"
+
+import React,{useState} from 'react'
+
+const AddUser = () => {
+  const [inputVal, setInputVal] = useState({
+    name:"",
+    email:""
+  })
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setInputVal({
+        ...inputVal,
+        [name]:value
+    })
+  }
+  const addNewUser = async() => {
+    const { name, email } = inputVal;
+    const response = await fetch("http://localhost:3000/api/users", {
+        method:"POST",
+        body:JSON.stringify({name,email})
+    })
+    const apiResponse = await response.json();
+    if(apiResponse.success){
+        alert("User Created")
+    }else{
+        alert("Check Input")
+    }
+  }
+  return (
+    <div>
+        <h1>Add New User</h1>
+        Name: <input type="text" name="name" value={inputVal.name} onChange={handleInput}/> <br />
+        Email: <input type="email" name="email" value={inputVal.email} onChange={handleInput}/>
+        <button onClick={addNewUser}>Add User</button>
+    </div>
+  )
+}
+
+export default AddUser;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+23.3) Creating and Using PUT API using NextJS 
+-------------------------------------------------
+
+a) Creating API 
+-----------------------------------------
+
+src/app/api/users/[id]/route.js 
+--------------------------------------
+
+import { users } from "@/utils/db";
+import { NextResponse } from "next/server";
+
+export const PUT = async(request) => {
+    const payload = await request.json();
+    if(payload.name || payload.age || payload.email){
+        return NextResponse.json({payload,success:true},{status:200})
+    }
+    return NextResponse.json({result:"request data is not valid",success:false},{status:400})
+}
+
+b) Consuming PUT API on Frontend
+-----------------------------------------
+
+src/app/page.jsx
+--------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS API Routes</h1>
+      <Link href="/users" children="Show Users"/> <br />
+      <Link href="/addUser" children="Add Users"/>
+    </>
+  );
+}
+
+src/app/users/page.jsx
+--------------------------------------
+
+import Link from "next/link";
+
+const getUsersData = async() => {
+    const data = await fetch("http://localhost:3000/api/users")
+    const userData = await data.json();
+    return userData
+}
+
+const UserList = async() => {
+    const userListData = await getUsersData();
+    
+    return(
+        <>
+           <h1>Users List</h1>
+           {
+            userListData && userListData.map((item,index) => (
+                <div key={index}>
+                    <Link href={`users/${item.id}`} children={item.name}/> &emsp;&emsp;
+                    <Link href={`users/${item.id}/updateuser`} children={"Edit User"}/>
+                </div>
+            ))
+           }
+        </>
+    )
+}
+
+export default UserList;
+
+src/app/users/[userId]/updateuser/page.jsx
+--------------------------------------------
+
+"use client"
+
+import React, { useEffect, useState } from 'react'
+
+const UpdateUser = ({params}) => {
+  const [inputVal, setInputVal] = useState({
+    name:"",
+    email:""
+  })
+  const [message, setMessage] = useState("")
+  useEffect(() => {
+    getUserData()
+  },[params.userId])
+
+  const getUserData = async() => {
+    try {
+      const apiResponse = await fetch(`http://localhost:3000/api/users/${params.userId}`);
+      const userData = await apiResponse.json();
+      if(userData && userData.length !== 0){
+        setInputVal({
+          name:userData[0]?.name,
+          email:userData[0]?.email,
+        })
+      }
+    } catch (error) {
+       setMessage("Something Went Wrong !!")
+    }
+  }
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setInputVal({
+      ...inputVal,
+      [name]:value
+    })
+  }
+  const updateUser = async() => {
+    try {
+      const apiResponse = await fetch(`http://localhost:3000/api/users/${params.userId}`,{
+        method:"PUT",
+        body: JSON.stringify({
+          name:inputVal.name,
+          email:inputVal.email
+        })
+      })
+      const apiResult = await apiResponse.json();
+      if(apiResult && apiResult?.success){
+        setMessage("User updated successfully")
+      }else{
+        setMessage("Error while updating user")
+      }
+    } catch (error) {
+      setMessage("Something Went Wrong")
+    }
+  }
+  return (
+    <div>
+      {message && message}
+      <h1>Update User</h1>
+      Name: <input value={inputVal.name} name="name" onChange={handleInput}/> <br />
+      Email: <input value={inputVal.email} name="email" onChange={handleInput}/> <br />
+      <button onClick={updateUser}>Update User</button>
+    </div>
+  )
+}
+
+export default UpdateUser;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+23.4) Creating and Using DELETE API using NextJS 
+-------------------------------------------------
+
+a) Creating API 
+-----------------------------------------
+
+src/app/api/users/[id]/route.js 
+--------------------------------------
+
+export const DELETE = async (request,content) => {
+    const userId =  await content.params.id;
+    if(userId){
+        return NextResponse.json({result:"User Deleted",success:true},{status:200})
+    }else{
+        return NextResponse.json({result:"Something Went Wrong",success:false},{status:400})
+    }
+}
+
+src/app/page.jsx
+--------------------------------------
+
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <> 
+      <h1>NextJS API Routes</h1>
+      <Link href="/users" children="Show Users"/> <br />
+      <Link href="/addUser" children="Add Users"/>
+    </>
+  );
+}
+
+src/app/users/page.jsx
+--------------------------------------
+
+import Link from "next/link";
+import Button from "../components/Button";
+
+const getUsersData = async() => {
+    const data = await fetch("http://localhost:3000/api/users")
+    const userData = await data.json();
+    return userData
+}
+
+const UserList = async() => {
+    const userListData = await getUsersData();
+    
+    return(
+        <>
+           <h1>Users List</h1>
+           {
+            userListData && userListData.map((item,index) => (
+                <div key={index}>
+                    <Link href={`users/${item.id}`} children={item.name}/> &emsp;&emsp;
+                    <Link href={`users/${item.id}/updateuser`} children={"Edit User"}/> &emsp;&emsp;
+                    <Button userId={item.id}>Delete User</Button>
+                </div>
+            ))
+           }
+        </>
+    )
+}
+
+export default UserList;
+
+src/app/components/Button.jsx
+--------------------------------------
+
+"use client"
+
+import React from 'react'
+
+const Button = ({children,userId}) => {
+  const deleteUser = async() => {
+    const apiResponseData = await fetch(`http://localhost:3000/api/users/${userId}`,{
+        method:"DELETE"
+    });
+    const result = await apiResponseData.json();
+    if(result && result.length !== 0){
+        alert("User Deleted")
+    }else{
+        alert("Something Went Wrong")
+    }
+  }
+  return (
+    <button onClick={deleteUser}>{children}</button>
+  )
+}
+
+export default Button;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+23.4) Catch all segments of Routes
+-------------------------------------------------
+
+=> API Routes can be extended to catch all paths by adding three dots ( ... ) inside the brackets. 
+
+=> For example: pages/api/post/[...postId]/page.jsx matches /api/post/a , but also /api/post/a/b , /api/post/a/b/c and so on.
+
+>> API Route -- http://localhost:3000/api/users/[...id]/abc/rohit/data -- (This will work when we use segments)
+
+******************************************************************************************************************************************************************************************************************************
+
+24) Deploying NextJS App
+----------------------------------------------------------------
+
+====================================================================================================================================================================================================================================================================================== END OF FILE
